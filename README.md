@@ -28,6 +28,7 @@ Choose an anime and discover your identity, exact age, powers, mastery, stats, a
 - **Local autosave:** resume a run and keep up to 50 completed characters.
 - **Character downloads:** export a build as a readable text file.
 - **Responsive GUI:** desktop controls fit the viewport; smaller screens use Wheel, Character, and Reactions tabs.
+- **Automatic mobile verdicts:** after a spin, a pop-up shows the result and reaction with Continue, Reroll, and Close controls. Closing keeps the result pending. Turning meme reactions Off disables the pop-up.
 - **Customizable experience:** optional sound, fast spins, and adjustable meme reactions. Reduced-motion preferences are respected.
 
 ## Play in your browser

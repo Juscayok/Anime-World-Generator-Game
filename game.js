@@ -40,23 +40,7 @@ function current(state){const s=state.queue[state.index];if(!s)return null;if(s.
 function commit(state){const s=current(state);if(!s||!state.pending)return;const result={id:s.id,name:s.name||s.label,label:state.pending.label,score:state.pending.score,chapter:s.chapter,neutral:s.neutral||false};state.results.push(result);if(s.id==='age'||s.id==='ancientAge')state.queue.splice(state.index+1,0,...ageFollowups(result.label));if(s.id==='count'){const n=Number(result.label),w=worlds[state.world];const inserted=[];for(let i=1;i<=n;i++){inserted.push(step('ability'+i,w.ability+' '+i,2,w.powers,{neutral:true,ability:true}),step('mastery'+i,'Technique '+i+' mastery',2,tiers));}state.queue.splice(state.index+1,0,...inserted);}state.index++;state.pending=null;
 while(state.queue[state.index]?.requires){const required=state.queue[state.index].requires;const r=state.results.find(x=>x.name===required);if(r&&r.label!=='No'&&r.label!=='None')break;state.index++;}
 const next=state.queue[state.index];if(next?.ability){const used=state.results.filter(x=>x.id.startsWith('ability')).map(x=>x.label);next.options=next.options.filter(x=>!used.includes(x.label));}if(state.index>=state.queue.length)state.finished=true;}
-function baseReaction(state,s,r){if(s.id==='win')return r.label==='VICTORY'?{tile:4,tag:'PLOT ARMOR ACTIVATED',text:'The credits are rolling. You’re still standing.'}:{tile:0,tag:'END OF THE ARC',text:'All those spins just to become a flashback.'};
-if(s.id.startsWith('mastery')){const ability=state.results.find(x=>x.id==='ability'+s.id.replace('mastery',''));if(r.score<=2)return{tile:5,tag:'READ THE MANUAL',text:ability?.label==='Limitless'?'Got the premium package. Skipped the tutorial.':'Unlocked '+(ability?.label||'the power')+'. Forgot to unlock the instructions.'};}
-if(s.id==='control'&&r.score<=2&&(state.results.find(x=>x.id==='energy')?.score||0)>=5)return{tile:5,tag:'MASSIVE LEAK',text:'Full tank. Absolutely no idea where the energy goes.'};
-if(s.id==='iq'&&r.score<=2&&(state.results.find(x=>x.id==='strength')?.score||0)>=4)return{tile:1,tag:'JUST PUNCH IT',text:'Thinking is optional. Punching is mandatory.'};
-if(s.neutral)return{tile:2,tag:'LORE UNLOCKED',text:r.label+'. The writers are setting something up.'};
-const pool=r.score>=6?[4,'MAIN CHARACTER ENERGY',['Who gave you admin permissions?','The power scaling community is in shambles.','The main character has arrived.']]:r.score>=4?[3,'LET THEM COOK',['Hold on… let them cook.','That training arc is paying off.','Okay, the build is coming together.']]:r.score>=3?[2,'WE TAKE THOSE',['We can work with this.','Not every episode needs a power-up.','A respectable day at the anime office.']]:r.score>=2?[1,'TRAINING ARC NEEDED',['Training arc. Immediately.','The mentor just let out a very long sigh.','There is potential. Somewhere.']]:[0,'EPISODE ONE VICTIM',['You are NOT surviving episode one.','The soundtrack just stopped.','Your rival is trying not to laugh.']];return{tile:pool[0],tag:pool[1],text:pool[2][Math.floor(Math.random()*pool[2].length)]};}
-function reaction(state,s,r){
- const result=baseReaction(state,s,r),pair=reactionPairs[state.world],speaker=(state.reactionCount||0)%2;
- state.reactionCount=(state.reactionCount||0)+1;
- result.frame=result.tile===4?8:result.tile===5?9:speaker*4+result.tile;
- if(s.id==='win')result.frame=r.label==='VICTORY'?10:11;
- result.speaker=result.frame>=8?pair.join(' & '):pair[speaker];
- if(!s.neutral&&!['win','control','iq'].includes(s.id)&&!s.id.startsWith('mastery')&&result.frame<8){
- const voices={Yuji:['We’re getting you a training montage.','We’ve got this. One step at a time.'],Gojo:['Looks like you need a lesson from your favorite teacher.','You might actually keep up with me.'],Naruto:['Don’t give up! We train again tomorrow!','Now that’s what I’m talking about!'],Sasuke:['Hmph. You need more training.','Not bad. Try to keep up.'],Luffy:['Let’s eat first. Then try again!','That’s awesome! You’re coming with us!'],Zoro:['You lost the fight before I lost the directions.','Good. Now make it count.'],Ichigo:['Okay. We’ve got some work to do.','That’s a power worth protecting people with.'],Rukia:['Back to the basics. Pay attention this time.','Your training is finally showing.'],Goku:['You just need a stronger training partner!','Wow! I want to fight you now!'],Vegeta:['Pathetic. Start training.','Finally, a power worth acknowledging.']};
- if(r.score<=2||r.score>=4)result.text=voices[result.speaker][r.score<=2?0:1];
- }
- return result;
-}
+const dialogue=typeof module!=='undefined'?require('./reactions.js'):root.AWGDialogue;
+function reaction(state,s,r,rng){return dialogue.react(state,s,r,reactionPairs,rng);}
 root.AWG={worlds,tiers,reactionPairs,ageFollowups,upgrade,makeQueue,fresh,weighted,current,commit,chance,reaction};if(typeof module!=='undefined')module.exports=root.AWG;
 })(typeof window!=='undefined'?window:globalThis);

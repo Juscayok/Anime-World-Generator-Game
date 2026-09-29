@@ -7,16 +7,16 @@ using System.Security.Cryptography;
 using System.Windows.Forms;
 
 [assembly: AssemblyTitle("Anime World Generator")]
-[assembly: AssemblyDescription("Anime World Generator 1.0 — offline anime wheel game")]
+[assembly: AssemblyDescription("Anime World Generator 1.1 — offline anime wheel game")]
 [assembly: AssemblyCompany("Anime World Generator")]
 [assembly: AssemblyProduct("Anime World Generator")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("1.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.0.0")]
+[assembly: AssemblyInformationalVersion("1.1")]
 
 internal static class Program
 {
-    private const string Version = "1.0";
+    private const string Version = "1.1";
     private const string Prefix = "AWG.assets.";
 
     [STAThread]
@@ -33,7 +33,7 @@ internal static class Program
             Assembly assembly = Assembly.GetExecutingAssembly();
             string[] resources = assembly.GetManifestResourceNames()
                 .Where(name => name.StartsWith(Prefix, StringComparison.Ordinal)).ToArray();
-            if (resources.Length != 12) throw new InvalidDataException("The game package is incomplete.");
+            if (resources.Length != 13) throw new InvalidDataException("The game package is incomplete.");
 
             foreach (string resource in resources)
             {
@@ -62,7 +62,7 @@ internal static class Program
                     throw new IOException("Could not verify " + name);
             }
             string index = Path.Combine(directory, "index.html");
-            if (!File.ReadAllText(index).Contains("Version 1.0"))
+            if (!File.ReadAllText(index).Contains("Version 1.1"))
                 throw new InvalidDataException("The application version does not match the launcher.");
             if (verifyOnly) return 0;
             Process.Start(new ProcessStartInfo(index) { UseShellExecute = true });

@@ -1,3 +1,12 @@
+# Release 1.2
+
+- Added Fairy Tail (Natsu/Lucy), My Hero Academia (Deku/Bakugo), Attack on Titan (Eren/Mikasa), and Hunter × Hunter (Gon/Killua), each with branching wheels and twelve reaction frames.
+- Added evolving layered portraits: age, outfit, affiliation coloring, origin tint, equipment and power motifs, with previews during pending rolls and saved-character viewing. Portraits run offline.
+- Added delete confirmation per saved character, including cancellation and storage-failure handling; the active run is preserved.
+- Added original personality dialogue for eight new speakers, self-recognition plus partner responses for all eighteen characters, and Zoro visits to all eight other worlds. Self-recognition takes priority over cameos.
+- Compact anime dropdown accommodates nine worlds on desktop and phone. Automatic mobile verdicts remain available.
+- Visible version 1.2, updated offline packaging, 21 verified embedded assets. Existing browser storage key and save schema retained. The 1.2 EXE extracts to its own version directory.
+
 # Release 1.1
 
 - Enemy Full Power and Prime results now receive negative player-benefit verdicts and sounds; weakened enemies receive favorable verdicts. Battle calculations are unchanged.

@@ -41,6 +41,8 @@ naruto:[['This isn’t Wano?','Naruto','Who are you? And how did you get into th
 bleach:[['Is this the way back to the ship?','Ichigo','Who is this swordsman? How do you get lost into the afterlife?'],['Nice swords. Wrong harbor, though.','Rukia','Harbor? This is Soul Society. Who let you in?'],['I followed the guy in black.','Ichigo','That describes half the people here!'],['Do you have a map?','Rukia','I can draw one. Will you actually follow it?']],
 dragonball:[['This isn’t Wano?','Vegeta','Who let this swordsman onto our planet?'],['Where is the ship?','Goku','Which ship? Wait, how did you even get here?'],['I took the left turn.','Vegeta','You took a turn out of your own universe.'],['I’m looking for a blond cook.','Goku','I know some blond fighters, but I wouldn’t ask them to cook.']]
 };
+const extra=typeof module!=='undefined'?require('./reactions-extra.js'):root.AWGReactionExtra;
+Object.assign(voices,extra.voices);Object.assign(cameoLines,extra.cameos);
 function pick(state,key,list,rng){state.dialogueHistory??=[];let choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>!state.dialogueHistory.includes(x.id));if(!choices.length){const last=state.dialogueHistory.filter(x=>x.startsWith(key+':')).at(-1);state.dialogueHistory=state.dialogueHistory.filter(x=>!x.startsWith(key+':'));choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>list.length===1||x.id!==last);}const choice=choices[Math.floor(rng()*choices.length)%choices.length];state.dialogueHistory.push(choice.id);state.dialogueHistory=state.dialogueHistory.slice(-40);return choice.line;}
 function react(state,s,r,pairs,rng=Math.random){
  const pair=pairs[state.world],turn=state.reactionCount||0,speaker=pair[turn%2];state.reactionCount=turn+1;
@@ -66,8 +68,10 @@ function react(state,s,r,pairs,rng=Math.random){
  else if(kind==='enemyBad'&&speaker==='Goku')line+=' '+pick(state,'gokuDanger',['I’m excited for the challenge, but your odds are worse.','I want a good fight too, but we should prepare first.','That sounds exciting to me. It is still bad news for your chances.','Even a fun challenge needs a plan.'],rng);
  else line+=' '+pick(state,speaker+mood,voices[speaker][mood],rng);
  const result={tile:frame>=8?(frame===9?5:4):frame%4,frame,tag,speaker,text:line,benefit:s.id==='enemyLevel'?(score<3?'bad':score>3?'good':'neutral'):mood};
+ const named=pair.find(name=>extra.personal[name].aliases.some(alias=>r.label.toLowerCase()===alias.toLowerCase()));
+ if(named){const p=extra.personal[named];const own=s.id==='enemy'?pick(state,'self'+named,p.own,rng):pick(state,'selfOther'+named,['That is my name on your roll. Let’s see what you do with it.','You got my name? Now I am paying attention.'],rng)+' '+pick(state,'selfVoice'+named,voices[named].neutral,rng);const partner=s.id==='enemy'?pick(state,'partner'+named,p.partner,rng):pair.find(n=>n!==named)+': '+pick(state,'otherPartner'+named,voices[pair.find(n=>n!==named)].neutral,rng);result.text=(s.id==='enemy'?'The wheel chose '+named+' as your opponent.':s.label+': '+r.label+'.')+'\n'+named+': '+own+'\n'+partner;result.speaker=pair.join(' & ');result.frame=score<=2?9:8;result.recognized=named;}
  // Cosmetic only: the cameo never changes a roll, score, or combat odds.
- const eligible=s.id!=='win'&&state.world!=='onepiece'&&turn>=2&&turn-(state.lastZoroCameo??-100)>=8;
+ const eligible=!named&&s.id!=='win'&&state.world!=='onepiece'&&turn>=2&&turn-(state.lastZoroCameo??-100)>=8;
  if(eligible&&rng()<.05){const exchange=pick(state,'cameo'+state.world,cameoLines[state.world].filter(x=>x[1]===speaker),rng);state.lastZoroCameo=turn;result.cameo={guest:'Zoro',host:exchange[1],guestLine:exchange[0],hostLine:exchange[2]};result.frame=pair.indexOf(exchange[1])*4+1;result.speaker=exchange[1];}
  return result;
 }

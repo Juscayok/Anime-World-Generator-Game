@@ -51,3 +51,26 @@ dialog{max-height:calc(100dvh - 32px);padding:20px}.summary-grid{grid-template-c
 @media(max-height:500px){#reactionDialog[open]{gap:5px}#mobileResult{font-size:21px}#mobileCaption{font-size:14px}}
 footer>.version-badge:first-child{display:inline-flex;align-items:center;flex-shrink:0;border:1px solid #6c5297;border-radius:5px;padding:4px 9px;color:#d0b7ff;background:#251c39;font-size:12px;font-weight:700;letter-spacing:.5px}
 @media(max-height:380px){html,body{height:auto;min-height:100%;overflow:auto}main{min-height:500px}.wheel-wrap{min-height:210px}.right{min-height:460px}}
+/* v1.2: nine worlds remain accessible in a compact dropdown. */
+#animeTabs{overflow:visible;flex:1;display:flex;justify-content:center}
+#animeTabs select{max-width:100%;width:220px;background:#151d30;color:#efebff;border:1px solid #4c3e72;border-radius:8px;padding:10px;font:600 14px 'Segoe UI',sans-serif}
+.portrait-thumb{display:block;padding:0;width:70px;height:80px;min-width:70px;border-color:#7962a6;overflow:hidden;border-radius:8px}
+.portrait-art{position:relative;display:block;width:100%;height:100%;overflow:hidden;isolation:isolate;border-radius:8px}
+.portrait-layer{position:absolute;display:block;background-repeat:no-repeat;pointer-events:none}
+.portrait-base{inset:0;z-index:2}.portrait-outfit{left:0;right:0;top:39%;bottom:0;z-index:3}
+.portrait-equipment{width:95%;height:65%;bottom:0;left:27%;z-index:5;transform:rotate(-9deg)}
+.skin-namekian .portrait-base{filter:sepia(.8) hue-rotate(55deg) saturate(1.6)}.skin-majin .portrait-base{filter:sepia(.65) hue-rotate(275deg) saturate(1.4)}.skin-otherworld .portrait-base{filter:saturate(.4) brightness(1.13)}
+.portrait-aura{position:absolute;inset:6% 10%;z-index:1;border:5px solid currentColor;border-radius:50%;box-shadow:0 0 30px currentColor,inset 0 0 40px currentColor;transform:rotate(-8deg)}
+.portrait-aura.flame{border-radius:80% 15% 65% 10%;transform:rotate(8deg)}.portrait-aura.lightning{clip-path:polygon(0 0,85% 10%,50% 43%,100% 40%,15% 100%,45% 58%,0 65%);background:currentColor;border-radius:0}.portrait-aura.ice{border-radius:8%;transform:rotate(35deg)}.portrait-aura.shadow{box-shadow:0 0 35px currentColor,inset 0 0 45px currentColor;border-style:dashed}
+.portrait-mark{position:absolute;top:22%;left:47%;z-index:6;color:#be67ff;font-size:14px}.portrait-mastery{position:absolute;width:75%;height:35%;left:12%;bottom:10%;border:2px solid;border-radius:50%;transform:rotate(-15deg);z-index:4;box-shadow:0 0 12px #ffffff55}
+.portrait-form{position:absolute;bottom:0;left:0;right:0;padding:4px;background:#131024db;color:#f5db99;text-align:center;font-size:11px;z-index:7}.portrait-thumb .portrait-form{display:none}
+.transformed .portrait-base{filter:brightness(1.15) saturate(1.35)}
+.portrait-view{display:grid;grid-template-columns:minmax(160px,270px) minmax(0,1fr);gap:18px;align-items:center}.portrait-large{height:min(48dvh,330px);aspect-ratio:4/5;max-width:100%;margin:auto}.portrait-details{font-size:13px;line-height:1.5;max-height:45dvh;overflow:auto}.portrait-details p{margin:0 0 10px}.portrait-note{font-size:12px;color:var(--muted)}
+.saved-card{display:grid;grid-template-columns:62px 1fr;gap:6px 12px;align-items:center}.saved-card .saved-art{grid-row:1/4;width:62px;height:76px}.saved-card h3,.saved-card p{margin:0}.saved-actions{display:flex;flex-wrap:wrap;gap:6px}.saved-actions button{font-size:12px;padding:7px 9px}.danger{color:#ffb1bb;border-color:#ac5365}.delete-actions{display:flex;gap:12px;margin-top:18px}
+#reactionText,#mobileCaption{white-space:pre-line}.identity>div:last-child{min-width:0}.identity h2{overflow-wrap:anywhere}
+@media(min-width:901px){.right{grid-template-rows:205px minmax(0,1fr)}.build .identity{flex:1;min-height:0}.build-rows .build-row:last-child{margin-bottom:0}}
+@media(max-width:1200px){#animeTabs{order:0;height:auto;flex-basis:auto;justify-content:flex-end}#animeTabs select{width:180px;font-size:12px;padding:8px}header{flex-wrap:nowrap}.brand{font-size:14px}.brand-icon{font-size:26px}}
+@media(max-width:900px){header{flex-wrap:wrap}#animeTabs{order:3;flex-basis:100%}#animeTabs select{width:100%;padding:7px}.right .build{gap:12px}.right .build .identity{flex-direction:column;flex:1;min-height:0;text-align:center;justify-content:center}.right .portrait-thumb{width:auto;height:min(25dvh,185px);aspect-ratio:4/5;flex-shrink:1;min-height:65px}.right .portrait-art{width:100%}.right .build-row{padding:8px}.right .build .identity p{margin:2px 0}.right .build .identity h2{font-size:18px}.portrait-view{grid-template-columns:1fr}.portrait-large{height:min(34dvh,240px)}.portrait-details{max-height:20dvh;font-size:12px}.portrait-view{gap:10px}}
+@media(max-height:640px) and (min-width:901px){.right{grid-template-rows:180px minmax(0,1fr)}.portrait-thumb{height:64px;width:55px;min-width:55px}.verdict .reaction-copy{max-height:145px}}
+
+.portrait-gear-accent{position:absolute;inset:0;z-index:5;background-size:100% 100%;background-repeat:no-repeat;pointer-events:none;filter:drop-shadow(0 2px 2px #080f20)}

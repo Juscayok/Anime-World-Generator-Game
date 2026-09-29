@@ -1,6 +1,6 @@
 # Anime World Generator
 
-**Version 1.1** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
+**Version 1.2** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
 
 ![Anime World Generator gameplay](updated-gui.png)
 
@@ -15,10 +15,16 @@ Choose an anime and discover your identity, exact age, powers, mastery, stats, a
 | One Piece | Luffy & Zoro | Signature moves, Devil Fruits, and Haki |
 | Bleach | Ichigo & Rukia | Spiritual pressure and spiritual techniques |
 | Dragon Ball | Goku & Vegeta | Ki and signature techniques |
+| Fairy Tail | Natsu & Lucy | Magic, guild bonds, and spells |
+| My Hero Academia | Deku & Bakugo | Quirks, drawbacks, and support equipment |
+| Attack on Titan | Eren & Mikasa | ODM combat, squad skills, and conditional Titan forms |
+| Hunter × Hunter | Gon & Killua | Nen, restrictions, aura, and abilities |
 
 ## Features
 
-Version 1.1 adds player-aware enemy verdicts, expanded character-specific opinions, and rare **lost Zoro** cameos. Enemy boosts are bad for your odds even when a character enjoys the challenge. Dialogue avoids recent repeats within a run. Zoro can visit the other four anime with a local character reacting to his arrival; the cameo is cosmetic, has a cooldown, and never changes your roll or stats.
+Version 1.2 adds four worlds, evolving layered character portraits, confirmed deletion from My Characters, and self-recognition when the wheel picks a reaction character. The anime selector is a compact dropdown to keep all nine worlds accessible on phones.
+
+The game also includes player-aware enemy verdicts, expanded character-specific opinions, and rare **lost Zoro** cameos. Enemy boosts are bad for your odds even when a character enjoys the challenge. Dialogue avoids recent repeats within a run. Zoro can visit the other eight anime with a local character reacting to his arrival; the cameo is cosmetic, has a cooldown, and never changes your roll or stats.
 
 - **Connected wheels:** earlier results determine which spins appear next.
 - **Exact-age generation:** spin an age range, then a specific year. Ancient characters receive an additional range wheel.
@@ -27,6 +33,8 @@ Version 1.1 adds player-aware enemy verdicts, expanded character-specific opinio
 - **Contextual meme reactions:** two characters per anime alternate reactions, with duo reactions for special results and battle outcomes.
 - **Three rerolls per run:** take another chance before accepting a result.
 - **Weighted final battles:** your build, enemy, enemy condition, and starting advantage affect your victory odds.
+- **Evolving portraits:** locally composed artwork previews pending rolls and updates age, world outfit, affiliation tint, origin coloring, equipment motifs, and power effects. Click the portrait to enlarge it. Saved builds reconstruct the same illustration; no runtime AI service or key is needed. The illustration represents supported visual traits, not an exact drawing of every power or creature anatomy.
+- **Delete saved characters:** each library entry has a Delete button and confirmation. Cancel keeps it; deleting does not replace your active run.
 - **Local autosave:** resume a run and keep up to 50 completed characters.
 - **Character downloads:** export a build as a readable text file.
 - **Responsive GUI:** desktop controls fit the viewport; smaller screens use Wheel, Character, and Reactions tabs.
@@ -42,7 +50,7 @@ No account, installation, build step, or internet connection is required after d
 3. Double-click **index.html** to open the game in a modern browser.
 4. Keep the HTML, CSS, JavaScript, and image files together.
 
-Version **1.1** appears in the app footer and browser title.
+Version **1.2** appears in the app footer and browser title.
 
 ## How to play
 
@@ -58,12 +66,12 @@ Starting a new run replaces the unfinished run. Completed characters remain in y
 
 ## Windows executable
 
-The game can also be packaged as **Anime World Generator 1.1.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
+The game can also be packaged as **Anime World Generator 1.2.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
 
 - Recommended: Windows 10 or 11 and a modern default browser.
 - Uses the .NET Framework supplied with modern Windows.
 - Includes all game assets and artwork; no installer is needed.
-- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.1`.
+- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.2`.
 - This personal release is unsigned, so Windows may show a publisher or reputation warning.
 
 Generated executables and ZIPs are kept in the local `dist/` folder, which is not tracked in Git. Downloading the source repository does not include a prebuilt executable. See the build instructions below.
@@ -98,13 +106,14 @@ node test-updates.cjs
 node test-interface.cjs
 node test-mobile.cjs
 node test-reactions.cjs
+node test-v1.2.cjs
 ```
 
-- `test-game.cjs`: 1,000 simulated complete runs covering branching, unique techniques, mastery, reactions, battle odds, and save serialization.
+- `test-game.cjs`: 1,800 simulated complete runs covering branching, unique techniques, mastery, reactions, battle odds, and save serialization.
 - `test-updates.cjs`: age boundaries, Ancient branches, saved-run migration, alternating characters, and duo reactions.
 - `test-interface.cjs`: interaction checks using a simulated DOM; this is not a visual browser test.
 
-The 1.1 interface was also checked in a browser at 1536×698, 1366×650, 1024×600, and 390×700. Extremely short viewports allow scrolling to preserve access to enlarged text and controls.
+The 1.2 interface was also checked in a browser at 1366×720 and 390×700, including character portraits and paired mobile reactions. Extremely short viewports allow scrolling to preserve access to enlarged text and controls.
 
 ### Build the Windows release
 
@@ -118,13 +127,13 @@ The script uses the Windows .NET Framework C# compiler, embeds the game files, v
 
 ```text
 dist/
-  Anime World Generator 1.1.exe
-  Anime-World-Generator-1.1-Windows.zip
+  Anime World Generator 1.2.exe
+  Anime-World-Generator-1.2-Windows.zip
   READ ME.txt
   SHA256.txt
 ```
 
-The script also creates `Anime-World-Generator-1.1-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
+The script also creates `Anime-World-Generator-1.2-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
 
 ## Project layout
 
@@ -135,6 +144,9 @@ The script also creates `Anime-World-Generator-1.1-Browser.zip`, containing the 
 | `fit.css` | Screen fitting and responsive layouts |
 | `game.js` | Anime data, branching wheels, reactions, and battle rules |
 | `reactions.js` | Character dialogue, player-benefit ratings, and Zoro cameos |
+| `worlds-extra.js` | Four additional anime configurations |
+| `reactions-extra.js` | New voices, named-character dialogue, and cameo exchanges |
+| `portrait.js` / `portrait-atlas.png` | Deterministic offline layered portraits |
 | `app.js` | Rendering, animation, controls, saves, and exports |
 | `reactions-*.png` | Anime-specific reaction artwork |
 | `launcher/Program.cs` | Windows launcher |
@@ -142,7 +154,7 @@ The script also creates `Anime-World-Generator-1.1-Browser.zip`, containing the 
 | `preview.cjs` | Optional local preview |
 | `VERSION` | Release number |
 
-See [CHANGELOG.md](CHANGELOG.md) for release details and [REACTION-ART.md](REACTION-ART.md) for the artwork brief.
+See [CHANGELOG.md](CHANGELOG.md) for release details and [REACTION-ART.md](REACTION-ART.md) for the original artwork brief and [ART-1.2.md](ART-1.2.md) for the new prompt set.
 
 ## About
 

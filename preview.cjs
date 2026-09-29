@@ -1,0 +1,5 @@
+// Optional loopback-only preview. The desktop shortcut still opens index.html directly.
+const http=require('node:http'),fs=require('node:fs'),path=require('node:path');
+const files=new Set(['index.html','style.css','fit.css','app.js','game.js','icon.svg',...['jjk','naruto','onepiece','bleach','dragonball'].map(x=>'reactions-'+x+'.png')]);
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.png':'image/png','.svg':'image/svg+xml'};
+http.createServer((req,res)=>{const url=new URL(req.url,'http://127.0.0.1');const file=url.pathname==='/'?'index.html':url.pathname.slice(1);if(!files.has(file)){res.writeHead(404);res.end();return}res.writeHead(200,{'Content-Type':types[path.extname(file)],'Cache-Control':'no-store'});fs.createReadStream(path.join(__dirname,file)).pipe(res)}).listen(4189,'127.0.0.1',()=>console.log('Game-only preview: http://127.0.0.1:4189'));

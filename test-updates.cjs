@@ -1,0 +1,10 @@
+const assert=require('node:assert/strict'),G=require('./game.js');
+for(const range of ['16–20','21–30','31–45','46–70']){
+ const [lo,hi]=range.split('–').map(Number),s=G.fresh('jjk');s.index=1;s.pending=s.queue[1].options.find(x=>x.label===range);G.commit(s);
+ const exact=G.current(s);assert.equal(exact.id,'exactAge');assert.deepEqual(exact.options.map(x=>Number(x.label)),Array.from({length:hi-lo+1},(_,i)=>lo+i));assert(exact.options.every(x=>x.weight===1));
+ s.pending=exact.options.at(-1);G.commit(s);assert.equal(s.results.at(-1).label,String(hi));assert.equal(G.current(s).id,'clan');
+}
+const ancient=G.fresh('jjk');ancient.index=1;ancient.pending=ancient.queue[1].options.find(x=>x.label==='Ancient');G.commit(ancient);assert.equal(G.current(ancient).id,'ancientAge');ancient.pending=G.current(ancient).options[2];G.commit(ancient);assert.equal(G.current(ancient).id,'exactAge');assert.equal(G.current(ancient).options[0].label,'500');
+for(const pending of [false,true]){const legacy=G.fresh('naruto');legacy.index=2;legacy.results=[{id:'age',label:'21–30'}];if(pending)legacy.pending={...legacy.queue[2].options[0]};const original=legacy.queue[legacy.index];G.upgrade(legacy);G.upgrade(legacy);assert.equal(legacy.queue.filter(x=>x.id==='exactAge').length,1);if(pending){assert.equal(G.current(legacy),original);G.commit(legacy)}assert.equal(G.current(legacy).id,'exactAge');}
+for(const world of Object.keys(G.worlds)){const state=G.fresh(world),step={id:'strength',neutral:false};const first=G.reaction(state,step,{label:'Average',score:3}),second=G.reaction(state,step,{label:'Average',score:3});assert.equal(first.speaker,G.reactionPairs[world][0]);assert.equal(second.speaker,G.reactionPairs[world][1]);assert.equal(first.frame,2);assert.equal(second.frame,6);assert.equal(G.reaction(state,step,{label:'Legendary',score:7}).frame,8);assert.equal(G.reaction(state,{id:'win'},{label:'DEFEAT',score:1}).frame,11);}
+console.log('Exact age boundaries, Ancient branches, equal odds, saved-run migration, speaker alternation and duo reactions passed.');

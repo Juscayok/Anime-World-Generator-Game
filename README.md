@@ -166,3 +166,6 @@ See [CHANGELOG.md](CHANGELOG.md) for release details and [REACTION-ART.md](REACT
 Anime World Generator is an unofficial fan project and is not affiliated with the creators or owners of the featured anime. Reaction images are AI-generated fan artwork; captions are original game dialogue, not quotations from the series.
 
 Power rankings, probabilities, and battle outcomes use the game's own rules and are not canonical comparisons.
+
+### Auto-spin
+Enable **Auto-spin** in Settings, then close Settings to begin. Each result waits for **Continue**, which accepts it and spins the next wheel. Rerolls remain available. The final Continue opens the battle scene. This preference is saved on your device; turn it off for manual spinning. Choose your appearance before enabling Auto-spin or starting a new automatic run.

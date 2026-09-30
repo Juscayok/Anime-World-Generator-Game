@@ -23,6 +23,7 @@ function ageFollowups(range){
  return [step('exactAge','Your exact age?',0,Array.from({length:high-low+1},(_,i)=>String(low+i)),{name:'Exact age',neutral:true,ageRange:range})];
 }
 function upgrade(state){
+ if(!['male','female'].includes(state.gender)){state.gender='male';state.genderChoice='male';}
  if(state.finished||state.queue.some(x=>x.id==='exactAge'||x.id==='ancientAge'))return state;
  const age=state.results.find(x=>x.id==='age');
  if(age)state.queue.splice(state.index+(state.pending?1:0),0,...ageFollowups(age.label));
@@ -36,7 +37,8 @@ step('count','How many '+(w.ability.toLowerCase().endsWith('y')?w.ability.toLowe
 ...['Strength','Durability','Speed','Stamina','Reflexes'].map(x=>step(x.toLowerCase(),x,3,power)),
 ...['Combat skill','Weapon skill','IQ','Battle IQ'].map(x=>step(x.toLowerCase(),x,4,tiers)),step('tool','Your equipment',4,w.weapons,{neutral:true}),step('toolmaster','Equipment mastery',4,tiers),
 step('enemy','Who is your enemy?',5,w.enemies.map((x,i)=>[x,1,Math.min(7,2+i*.55)]),{neutral:true}),step('enemyLevel','Your enemy’s condition',5,[['Weakened',20,2],['Base form',40,3],['Full power',30,5],['Prime',10,7]],{neutral:true}),step('field','The battlefield',5,['City ruins','Open plains','Dense forest','Underground arena','Mountain summit'],{neutral:true}),step('advantage','Your starting conditions',5,[['Ambushed',20,1],['Exhausted',15,2],['Even footing',40,3],['Prepared',20,5],['Perfect setup',5,7]]),step('win','Do you win?',5,[['VICTORY',50,7],['DEFEAT',50,1]])];}
-function fresh(world){return{version:1,id:Date.now()+'-'+Math.random().toString(36).slice(2),world,queue:makeQueue(world),index:0,results:[],pending:null,rerolls:3,finished:false};}
+function setAppearance(run,choice,rng=Math.random){run.genderChoice=['male','female','random'].includes(choice)?choice:'male';run.gender=run.genderChoice==='random'?(rng()<.5?'male':'female'):run.genderChoice;return run;}
+function fresh(world,gender='male',rng=Math.random){return setAppearance({version:1,id:Date.now()+'-'+Math.random().toString(36).slice(2),world,queue:makeQueue(world),index:0,results:[],pending:null,rerolls:3,finished:false},gender,rng);}
 function weighted(list,r=Math.random()){let sum=list.reduce((s,x)=>s+x.weight,0),target=r*sum;for(let i=0;i<list.length;i++){target-=list[i].weight;if(target<0)return i;}return list.length-1;}
 function chance(state){const values=state.results.filter(x=>!x.neutral&&x.id!=='count'&&x.id!=='advantage');const avg=values.reduce((s,x)=>s+x.score,0)/(values.length||1);const enemy=state.results.find(x=>x.id==='enemy')?.score||3;const level=state.results.find(x=>x.id==='enemyLevel')?.score||3;const setup=state.results.find(x=>x.id==='advantage')?.score||3;return Math.max(5,Math.min(95,Math.round(50+(avg-enemy)*13+(3-level)*5+(setup-3)*5)));}
 function current(state){const s=state.queue[state.index];if(!s)return null;if(s.id==='win'){const p=chance(state);return{...s,options:options([['VICTORY',p,7],['DEFEAT',100-p,1]])};}return s;}
@@ -45,5 +47,5 @@ while(state.queue[state.index]?.requires){const required=state.queue[state.index
 const next=state.queue[state.index];if(next?.ability){const used=state.results.filter(x=>x.id.startsWith('ability')).map(x=>x.label);next.options=next.options.filter(x=>!used.includes(x.label));}if(state.index>=state.queue.length)state.finished=true;}
 const dialogue=typeof module!=='undefined'?require('./reactions.js'):root.AWGDialogue;
 function reaction(state,s,r,rng){return dialogue.react(state,s,r,reactionPairs,rng);}
-root.AWG={worlds,tiers,reactionPairs,ageFollowups,upgrade,makeQueue,fresh,weighted,current,commit,chance,reaction};if(typeof module!=='undefined')module.exports=root.AWG;
+root.AWG={worlds,tiers,reactionPairs,ageFollowups,upgrade,makeQueue,fresh,setAppearance,weighted,current,commit,chance,reaction};if(typeof module!=='undefined')module.exports=root.AWG;
 })(typeof window!=='undefined'?window:globalThis);

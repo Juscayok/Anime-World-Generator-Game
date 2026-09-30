@@ -1,6 +1,6 @@
 # Anime World Generator
 
-**Version 1.2** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
+**Version 1.3** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
 
 ![Anime World Generator gameplay](updated-gui.png)
 
@@ -21,6 +21,8 @@ Choose an anime and discover your identity, exact age, powers, mastery, stats, a
 | Hunter × Hunter | Gon & Killua | Nen, restrictions, aura, and abilities |
 
 ## Features
+
+Version 1.3 adds Male, Female, and Random appearance choices before your first spin. Random is resolved once per run and saved. Completed runs automatically reveal a layered final battle scene with your actual rolled opponent: you stand victorious over their defeated pose, or kneel below their victorious pose. All 93 opponent entries have specific artwork in both poses, including squads. Open **View Character** or a saved build to see the same scene again, then choose **Character stats** or **Clean portrait**.
 
 Version 1.2 adds four worlds, evolving layered character portraits, confirmed deletion from My Characters, and self-recognition when the wheel picks a reaction character. The anime selector is a compact dropdown to keep all nine worlds accessible on phones.
 
@@ -50,12 +52,12 @@ No account, installation, build step, or internet connection is required after d
 3. Double-click **index.html** to open the game in a modern browser.
 4. Keep the HTML, CSS, JavaScript, and image files together.
 
-Version **1.2** appears in the app footer and browser title.
+Version **1.3** appears in the app footer and browser title.
 
 ## How to play
 
 1. Select an anime from the top navigation.
-2. Click **Spin the Wheel**.
+2. Choose **Male**, **Female**, or **Random**, then click **Spin the Wheel**.
 3. Review the result and meme verdict.
 4. Click **Continue**, or spend a **Reroll** before continuing.
 5. Use **Full sheet** to inspect your character and **View wheel odds** to check probabilities.
@@ -66,12 +68,12 @@ Starting a new run replaces the unfinished run. Completed characters remain in y
 
 ## Windows executable
 
-The game can also be packaged as **Anime World Generator 1.2.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
+The game can also be packaged as **Anime World Generator 1.3.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
 
 - Recommended: Windows 10 or 11 and a modern default browser.
 - Uses the .NET Framework supplied with modern Windows.
 - Includes all game assets and artwork; no installer is needed.
-- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.2`.
+- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.3`.
 - This personal release is unsigned, so Windows may show a publisher or reputation warning.
 
 Generated executables and ZIPs are kept in the local `dist/` folder, which is not tracked in Git. Downloading the source repository does not include a prebuilt executable. See the build instructions below.
@@ -107,13 +109,14 @@ node test-interface.cjs
 node test-mobile.cjs
 node test-reactions.cjs
 node test-v1.2.cjs
+node test-v1.3.cjs
 ```
 
 - `test-game.cjs`: 1,800 simulated complete runs covering branching, unique techniques, mastery, reactions, battle odds, and save serialization.
 - `test-updates.cjs`: age boundaries, Ancient branches, saved-run migration, alternating characters, and duo reactions.
 - `test-interface.cjs`: interaction checks using a simulated DOM; this is not a visual browser test.
 
-The 1.2 interface was also checked in a browser at 1366×720 and 390×700, including character portraits and paired mobile reactions. Extremely short viewports allow scrolling to preserve access to enlarged text and controls.
+The 1.3 interface was also checked in a browser at 1366×720 and 390×700, including appearance selection, female portraits, victory/defeat scenes, and mobile controls. Extremely short viewports allow scrolling to preserve access to enlarged text and controls.
 
 ### Build the Windows release
 
@@ -127,13 +130,13 @@ The script uses the Windows .NET Framework C# compiler, embeds the game files, v
 
 ```text
 dist/
-  Anime World Generator 1.2.exe
-  Anime-World-Generator-1.2-Windows.zip
+  Anime World Generator 1.3.exe
+  Anime-World-Generator-1.3-Windows.zip
   READ ME.txt
   SHA256.txt
 ```
 
-The script also creates `Anime-World-Generator-1.2-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
+The script also creates `Anime-World-Generator-1.3-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
 
 ## Project layout
 
@@ -146,7 +149,9 @@ The script also creates `Anime-World-Generator-1.2-Browser.zip`, containing the 
 | `reactions.js` | Character dialogue, player-benefit ratings, and Zoro cameos |
 | `worlds-extra.js` | Four additional anime configurations |
 | `reactions-extra.js` | New voices, named-character dialogue, and cameo exchanges |
-| `portrait.js` / `portrait-atlas.png` | Deterministic offline layered portraits |
+| `portrait.js` / `portrait-*.png` | Deterministic male/female layered portraits |
+| `battle.js` / `battle-art.js` | Exact opponent mapping and measured sprite bounds |
+| `battle-enemies-*.png` / `battle-legs.png` / `battle-hands.png` | Opponent poses and player pose layers |
 | `app.js` | Rendering, animation, controls, saves, and exports |
 | `reactions-*.png` | Anime-specific reaction artwork |
 | `launcher/Program.cs` | Windows launcher |
@@ -154,7 +159,7 @@ The script also creates `Anime-World-Generator-1.2-Browser.zip`, containing the 
 | `preview.cjs` | Optional local preview |
 | `VERSION` | Release number |
 
-See [CHANGELOG.md](CHANGELOG.md) for release details and [REACTION-ART.md](REACTION-ART.md) for the original artwork brief and [ART-1.2.md](ART-1.2.md) for the new prompt set.
+See [CHANGELOG.md](CHANGELOG.md) for release details and [REACTION-ART.md](REACTION-ART.md) for the original artwork brief and [ART-1.2.md](ART-1.2.md) for the 1.2 prompt set; [ART-1.3.md](ART-1.3.md) records the female and battle artwork.
 
 ## About
 

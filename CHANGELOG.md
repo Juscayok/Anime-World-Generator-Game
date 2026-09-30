@@ -1,3 +1,12 @@
+# Release 1.3
+
+- Male, Female, and Random appearance choices before the first spin; the resolved appearance persists through rerolls, reloads, and saved characters. Existing saves keep their male appearance.
+- Female illustrated age layers and matching equipment/outfit composition.
+- Automatic final battle reveal after accepting the final outcome, with your actual generated build and the exact selected opponent. Victory and defeat use different poses; all 93 opponent entries are covered, including squads.
+- Saved characters reopen the same scene, with links to stats, clean portrait, and text download. Opponent condition and battlefield are displayed; a condition adds visual emphasis rather than inventing an unrolled form.
+- Measured artwork bounds prevent neighboring sprites appearing in the scene. No runtime image API or network access is required.
+- Visible version 1.3 and updated Windows/browser packages.
+
 # Release 1.2
 
 - Added Fairy Tail (Natsu/Lucy), My Hero Academia (Deku/Bakugo), Attack on Titan (Eren/Mikasa), and Hunter × Hunter (Gon/Killua), each with branching wheels and twelve reaction frames.

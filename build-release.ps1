@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
 $releaseVersion = (Get-Content -LiteralPath (Join-Path $projectRoot 'VERSION') -Raw).Trim()
-if ($releaseVersion -ne '1.3') { throw 'Update launcher version metadata before building a different release.' }
+if ($releaseVersion -ne '1.4') { throw 'Update launcher version metadata before building a different release.' }
 $compilerPath = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 if (-not (Test-Path -LiteralPath $compilerPath)) { throw 'The Windows .NET Framework C# compiler is required to build.' }
 $outputDirectory = Join-Path $projectRoot 'dist'
@@ -22,7 +22,7 @@ $compilerArguments += Join-Path $projectRoot 'launcher\Program.cs'
 & $compilerPath @compilerArguments
 if ($LASTEXITCODE -ne 0) { throw 'Executable compilation failed.' }
 
-$verificationDirectory = Join-Path $projectRoot 'build\verify-1.3'
+$verificationDirectory = Join-Path $projectRoot 'build\verify-1.4'
 $verificationArguments = '--verify-extract "' + $verificationDirectory + '"'
 $verification = Start-Process -FilePath $executablePath -ArgumentList $verificationArguments -Wait -PassThru -WindowStyle Hidden
 if ($verification.ExitCode -ne 0) { throw 'Executable extraction verification failed.' }
@@ -34,12 +34,12 @@ foreach ($asset in $assets) {
 
 $releaseReadme = Join-Path $outputDirectory 'READ ME.txt'
 @'
-ANIME WORLD GENERATOR — VERSION 1.3
+ANIME WORLD GENERATOR — VERSION 1.4
 
-Double-click Anime World Generator 1.3.exe to play.
+Double-click Anime World Generator 1.4.exe to play.
 Windows 10 or 11 with a modern default browser is recommended.
 The executable includes all game files and artwork. No installer or internet is needed.
-It extracts the game to %LOCALAPPDATA%\AnimeWorldGenerator\1.3 and opens index.html in your browser.
+It extracts the game to %LOCALAPPDATA%\AnimeWorldGenerator\1.4 and opens index.html in your browser.
 The launcher uses the .NET Framework supplied with modern Windows.
 
 You can share the EXE by itself or this ZIP. Browser saves are personal to each player;

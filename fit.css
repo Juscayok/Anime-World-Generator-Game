@@ -42,7 +42,7 @@ dialog{max-height:calc(100dvh - 32px);padding:20px}.summary-grid{grid-template-c
 .cameo-exchange,#mobileCameo{white-space:pre-line;font:13px/1.35 'Segoe UI',sans-serif;color:#d3bbff;border-left:2px solid #9770d6;padding-left:9px;margin:7px 0 0}.cameo-exchange[hidden]{display:none}
 #mobileCaption{font-size:15px}.verdict #reactionText{font-size:13px}.verdict .reaction-copy{max-height:240px;overflow:auto}
 #reactionDialog{width:min(440px,calc(100vw - 24px));height:min(660px,calc(100dvh - 24px));max-height:calc(100dvh - 24px);padding:16px;overflow:auto}
-#reactionDialog[open]{display:grid;grid-template-rows:auto auto auto minmax(70px,1fr) auto auto;gap:10px}
+#reactionDialog[open]{display:grid;grid-template-rows:auto auto auto auto minmax(70px,1fr) auto auto;gap:10px}
 .reaction-modal-header{display:flex;align-items:center;justify-content:space-between;gap:10px}.reaction-modal-header button{padding:8px 12px;min-height:42px}
 #mobileResult{font:600 26px Georgia,serif;color:var(--gold);margin:0;text-align:center;overflow-wrap:anywhere}
 #mobileTag{justify-self:center;font-size:10px;padding:5px 9px}
@@ -99,3 +99,16 @@ dialog:has(.battle-scene){width:min(880px,calc(100vw - 24px))}.battle-scene{posi
 .battle-hand.hand-left{left:0;background-position-x:20.8%;background-position-y:40%}
 .battle-hand.hand-right{right:0;background-position-x:79%;background-position-y:40%}
 .battle-upper .portrait-art{z-index:1}
+
+/* v1.4 navigation and onboarding */
+#animeTabs{min-width:0;overflow:hidden;justify-content:initial;gap:3px;flex:1;order:0;flex-basis:auto;height:auto}
+#animeTabs .anime-tab-list{display:flex;overflow-x:auto;min-width:0;flex:1;gap:3px;scrollbar-width:thin;overscroll-behavior-x:contain;touch-action:pan-x}
+#animeTabs button{flex-shrink:0;white-space:nowrap;padding:13px 10px;font-size:12px;border-radius:6px}
+#animeTabs .anime-arrow{padding:8px;font-size:24px}#animeTabs button.active{background:#362456;border-bottom:3px solid #af85ff}
+#identityBadges{display:flex;gap:4px;flex-wrap:wrap;max-height:48px;overflow:auto;flex-shrink:0}.identity-badge{font-size:10px;background:#24233c;color:#e2d8ff;border:1px solid #514366;border-radius:5px;padding:3px 5px}
+.reaction-topic{font-size:13px;color:#c7b5ef;margin:0 0 5px;text-align:center}.tutorial-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}.tutorial-actions button{min-width:0}.tutorial-actions .primary{min-width:95px}
+@media(max-width:1100px){header{flex-wrap:wrap}#animeTabs{order:3;flex:1 1 100%}.header-actions{margin-left:auto}#animeTabs button{padding:8px 10px}}
+
+body{grid-template-columns:minmax(0,1fr)}header,main,footer{min-width:0}
+
+#animeTabs button{flex:0 0 auto}#animeTabs .anime-arrow{width:28px;padding:5px;min-width:28px}

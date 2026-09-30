@@ -1,6 +1,6 @@
 # Anime World Generator
 
-**Version 1.3** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
+**Version 1.4** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
 
 ![Anime World Generator gameplay](updated-gui.png)
 
@@ -52,7 +52,7 @@ No account, installation, build step, or internet connection is required after d
 3. Double-click **index.html** to open the game in a modern browser.
 4. Keep the HTML, CSS, JavaScript, and image files together.
 
-Version **1.3** appears in the app footer and browser title.
+Version **1.4** appears in the app footer and browser title.
 
 ## How to play
 
@@ -68,12 +68,12 @@ Starting a new run replaces the unfinished run. Completed characters remain in y
 
 ## Windows executable
 
-The game can also be packaged as **Anime World Generator 1.3.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
+The game can also be packaged as **Anime World Generator 1.4.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
 
 - Recommended: Windows 10 or 11 and a modern default browser.
 - Uses the .NET Framework supplied with modern Windows.
 - Includes all game assets and artwork; no installer is needed.
-- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.3`.
+- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.4`.
 - This personal release is unsigned, so Windows may show a publisher or reputation warning.
 
 Generated executables and ZIPs are kept in the local `dist/` folder, which is not tracked in Git. Downloading the source repository does not include a prebuilt executable. See the build instructions below.
@@ -130,13 +130,13 @@ The script uses the Windows .NET Framework C# compiler, embeds the game files, v
 
 ```text
 dist/
-  Anime World Generator 1.3.exe
-  Anime-World-Generator-1.3-Windows.zip
+  Anime World Generator 1.4.exe
+  Anime-World-Generator-1.4-Windows.zip
   READ ME.txt
   SHA256.txt
 ```
 
-The script also creates `Anime-World-Generator-1.3-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
+The script also creates `Anime-World-Generator-1.4-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
 
 ## Project layout
 
@@ -169,3 +169,8 @@ Power rankings, probabilities, and battle outcomes use the game's own rules and 
 
 ### Auto-spin
 Enable **Auto-spin** in Settings, then close Settings to begin. Each result waits for **Continue**, which accepts it and spins the next wheel. Rerolls remain available. The final Continue opens the battle scene. This preference is saved on your device; turn it off for manual spinning. Choose your appearance before enabling Auto-spin or starting a new automatic run.
+
+## Version 1.4
+First-visit tutorial (replay in Settings), swipeable anime navigation on desktop and phones, identity badges, question labels above reaction results, 72 new character-specific anime references, and modestly friendlier roll weights. Final victory chances gain five percentage points, capped at 95%; enemy boosts are still bad for your chances. Newly generated steps use the new weights; already saved wheel options remain intact. Portrait neck and wrist joins are corrected, including both mobile hands.
+
+Validation for 1.4: `node test-v1.4.cjs`, `node test-autospin.cjs`, the existing game/reaction/interface suites, and browser layout checks at desktop and 390×700.

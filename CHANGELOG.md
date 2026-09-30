@@ -1,3 +1,13 @@
+# Release 1.4
+
+- First-visit tutorial with Skip, Back, Next, and replay from Settings.
+- Single horizontal anime row with scrolling/swiping and arrow buttons on desktop and mobile.
+- Identity badges and question headings in reaction pop-ups.
+- 72 additional original anime-aware lines across the nine worlds; existing character recognition and lost-Zoro cameos retained.
+- Modest improvements to stat, ability-count, unlock and enemy-condition weights; final victory chance increased by five percentage points within the existing 5–95% bounds. Displayed odds match selection weights.
+- Fixed neck/wrist alignment and mobile right-hand visibility without replacing artwork.
+- Auto-spin retained, saved characters preserved, and offline packages rebuilt.
+
 # Release 1.3
 
 - Male, Female, and Random appearance choices before the first spin; the resolved appearance persists through rerolls, reloads, and saved characters. Existing saves keep their male appearance.

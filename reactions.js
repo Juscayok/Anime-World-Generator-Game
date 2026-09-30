@@ -35,6 +35,188 @@ limitless:{Yuji:['Limitless? Gojo is going to make this about himself.','You got
 uchiha:{Naruto:['An Uchiha? Great. Please communicate more than Sasuke does.','That clan comes with serious talent. Try smiling occasionally.','Another Uchiha! I’m scheduling friendship and training.','Uchiha, huh? I’m expecting big things and very short conversations.'],Sasuke:['An Uchiha name is a responsibility, not a shortcut.','You carry that clan name. Do something worthy of it.','Being an Uchiha does not excuse poor training.','Another Uchiha. Keep your focus and your own judgment.']},
 gum:{Luffy:['That fruit sounds familiar! Show me what you can stretch!','You got my kind of power! Let’s do something ridiculous with it.','Stretchy powers? We are definitely having fun now.','That fruit needs imagination. Fortunately, weird ideas are free.'],Zoro:['Great. More stretching. Try not to launch me anywhere.','Another rubber fighter. The ship is going to suffer.','I already train around one stretchy idiot. Be the careful one.','That fruit is useful. Just keep the experiments away from my nap.']}
 };
+const lore={
+ "Ten Shadows": {
+  "Yuji": [
+   "That is Megumi’s technique! His shikigami have saved me more than once. Treat them like partners.",
+   "Megumi makes Ten Shadows look tactical. I would probably start by making friends with the dogs."
+  ],
+  "Gojo": [
+   "Megumi’s technique has tremendous potential. I expect you to use your head before summoning trouble.",
+   "Ten Shadows? I have high expectations for Megumi, and you just volunteered for similar homework."
+  ]
+ },
+ "Boogie Woogie": {
+  "Yuji": [
+   "Todo’s technique! Fighting beside him taught me how much a well-timed switch can change.",
+   "If you can coordinate like Todo, I want you on my team. Please spare me the surprise interview."
+  ],
+  "Gojo": [
+   "Todo has a wonderfully troublesome technique. Timing matters more than a dramatic clap.",
+   "Boogie Woogie rewards a sharp mind. Todo would certainly have opinions about your rhythm."
+  ]
+ },
+ "Rasengan": {
+  "Naruto": [
+   "Jiraiya helped me learn that! I know exactly how much practice goes into making it work.",
+   "That technique connects me to my dad and my teacher. Put some heart into learning it."
+  ],
+  "Sasuke": [
+   "Naruto has made that technique very difficult to ignore. Watch your opening before charging.",
+   "A Rasengan. I know what Naruto can do with one; now show me your control."
+  ]
+ },
+ "Chidori": {
+  "Naruto": [
+   "That is Sasuke’s technique! I have been on the wrong end of that rivalry enough times.",
+   "Sasuke makes that look effortless. I would rather see you use it beside a friend than against one."
+  ],
+  "Sasuke": [
+   "Kakashi taught me Chidori. Speed without perception leaves you dangerously exposed.",
+   "That technique is familiar. Do not imitate my confidence before you develop the control."
+  ]
+ },
+ "Flame-Flame": {
+  "Luffy": [
+   "That reminds me of Ace and Sabo. That power means a lot more to me than a flashy attack.",
+   "Fire like Ace’s? Look after the people beside you. That matters to me."
+  ],
+  "Zoro": [
+   "The captain has family tied to that flame. Treat it with some respect.",
+   "A powerful fruit. Ace still had to be a fighter, and so do you."
+  ]
+ },
+ "Op-Op": {
+  "Luffy": [
+   "That is like Law’s power! His plans are complicated, but I trust him in a fight.",
+   "Law does all sorts of strange things with that ability. Can you do something cool too?"
+  ],
+  "Zoro": [
+   "Law uses that fruit with precision. Randomly moving things around is not a strategy.",
+   "That reminds me of Law. I appreciate a useful ally who can keep up in a fight."
+  ]
+ },
+ "Petal Storm": {
+  "Ichigo": [
+   "Byakuya’s blade taught me not to mistake beauty for safety. Watch every angle.",
+   "That reminds me of fighting Byakuya. I would take those petals very seriously."
+  ],
+  "Rukia": [
+   "Those petals remind me of my brother’s power. His precision is the part you should study first.",
+   "That brings Byakuya’s Senbonzakura to mind. I respect his discipline; I expect you to train carefully."
+  ]
+ },
+ "Ice Prison": {
+  "Ichigo": [
+   "Ice like that reminds me of Rukia’s sword! I trust her, and I know there is more to that ice than appearances.",
+   "Rukia would make you practice the basics before letting you show that off. Listen to her."
+  ],
+  "Rukia": [
+   "Ice brings my Sode no Shirayuki to mind. Beauty does not excuse careless control. Pay attention.",
+   "That reminds me of my blade. I will explain the technique, and you will follow the instructions."
+  ]
+ },
+ "Kamehameha": {
+  "Goku": [
+   "Master Roshi taught me that! I still love seeing what training can do with a familiar technique.",
+   "That takes me back to Roshi’s lessons. Show me your stance, then we can practice."
+  ],
+  "Vegeta": [
+   "Kakarot uses that beam constantly. I am interested in whether you can actually aim it.",
+   "Another Kamehameha. Do not expect Kakarot’s results just because you copied the technique."
+  ]
+ },
+ "Final Flash": {
+  "Goku": [
+   "Vegeta puts a lot of power into that! I would definitely give him room to charge it.",
+   "That is Vegeta’s attack. He will pretend not to care how well you use it."
+  ],
+  "Vegeta": [
+   "My Final Flash. If you are going to use it, commit to your training.",
+   "You chose one of my techniques. I will not tolerate a halfhearted demonstration."
+  ]
+ },
+ "Ice-Make Lance": {
+  "Natsu": [
+   "Gray’s ice? Great, now I have another person arguing with me about temperature.",
+   "That reminds me of Gray. We argue, but I trust him when the guild needs us."
+  ],
+  "Lucy": [
+   "Gray makes that look easy because he has trained hard. Please copy his control, not his clothing habits.",
+   "Ice-Make like Gray’s could be a great fit for our team. Natsu will complain anyway."
+  ]
+ },
+ "Celestial Gate": {
+  "Natsu": [
+   "Lucy’s kind of magic! Her spirits are our friends, so treat them properly.",
+   "That reminds me of Lucy. She always finds a way to help when a mission gets messy."
+  ],
+  "Lucy": [
+   "Celestial spirits are partners, not disposable tools. I want you to understand that first.",
+   "My kind of magic! The relationship behind a gate matters as much as the power coming through it."
+  ]
+ },
+ "Half-Cold Half-Hot": {
+  "Deku": [
+   "Todoroki’s quirk! Balancing the two sides gives you options, but it takes real control.",
+   "That reminds me of Todoroki. I respect how hard he works to make that power his own."
+  ],
+  "Bakugo": [
+   "Half-and-half’s quirk. Both sides are useful if you stop hesitating.",
+   "Todoroki is a serious rival. Having his kind of power does not mean you have earned his skill."
+  ]
+ },
+ "Zero Gravity": {
+  "Deku": [
+   "Uraraka’s quirk! She finds clever rescue uses for it. I would study those first.",
+   "That makes me think of Uraraka. Timing and teamwork can make that ability incredible."
+  ],
+  "Bakugo": [
+   "Round Face made me take that quirk seriously. Do not underestimate what good planning can do.",
+   "Zero Gravity? I have seen Uraraka turn falling debris into a real problem. Use your head."
+  ]
+ },
+ "Armored Titan": {
+  "Eren": [
+   "Reiner’s Titan. I know how dangerous that armor is; I would look for the joints.",
+   "That form reminds me of Reiner. I have complicated feelings about the person inside it."
+  ],
+  "Mikasa": [
+   "Reiner’s armor is difficult to cut. The weak points matter more than your anger.",
+   "The Armored Titan. I would coordinate the squad before committing to an attack."
+  ]
+ },
+ "Colossal Titan": {
+  "Eren": [
+   "That Titan changed my life. I cannot look at its power without thinking about the people below it.",
+   "The Colossal Titan is overwhelming. Decide who you are protecting before you transform."
+  ],
+  "Mikasa": [
+   "Keep your allies away from the transformation. Power that large demands planning.",
+   "That form reminds me of Bertholdt. Heat and scale make approaching it dangerous."
+  ]
+ },
+ "Godspeed": {
+  "Gon": [
+   "Killua’s technique! He is amazingly fast, and I trust him to watch my back.",
+   "Godspeed makes me think of Killua. I want to train harder so I can keep up with him."
+  ],
+  "Killua": [
+   "My Godspeed. You need more than a flashy name to handle electricity properly.",
+   "That is my technique. Practice your timing before you start bragging about speed."
+  ]
+ },
+ "Bungee Gum": {
+  "Gon": [
+   "Hisoka’s ability! It looks simple until he uses it in a way you did not expect.",
+   "That reminds me of Hisoka. I want to understand the trick before I get caught by it again."
+  ],
+  "Killua": [
+   "Hisoka’s power. The dangerous part is how he sets traps with it.",
+   "Bungee Gum? I would rather understand where Hisoka attached it than listen to him explain it."
+  ]
+ }
+};
 const cameoLines={
 jjk:[['Which way to the ship?','Gojo','You crossed into another anime and still won’t ask for directions?'],['This school isn’t on my map.','Yuji','Who is this guy, and why does he have three swords?'],['I was following the road.','Gojo','That road crossed a franchise boundary. Impressive.'],['Is the captain here?','Yuji','Wrong team. Wrong school. Possibly wrong universe.']],
 naruto:[['This isn’t Wano?','Naruto','Who are you? And how did you get into the village?'],['I took a shortcut.','Sasuke','Through another universe? Your navigation needs work.'],['Which way to the port?','Naruto','We’re a hidden village, not a pirate harbor!'],['The road was straight.','Sasuke','Apparently the dimensions were not.']],
@@ -64,7 +246,9 @@ function react(state,s,r,pairs,rng=Math.random){
  const vars={value:r.label,label:s.label||s.id,enemy,ability};
  let line=pick(state,kind,contexts[kind],rng).replace(/\{(\w+)\}/g,(_,k)=>vars[k]);
  const value=r.label.toLowerCase();let special=value.includes('frieza')||value.includes('frost demon')?'frieza':value.includes('limitless')?'limitless':value.includes('uchiha')?'uchiha':value.includes('gum-gum')?'gum':null;
- if(special&&specials[special][speaker])line+=' '+pick(state,special+speaker,specials[special][speaker],rng);
+ const reference=Object.keys(lore).find(key=>value.includes(key.toLowerCase())&&lore[key][speaker]);
+ if(reference)line+=' '+pick(state,'lore'+reference+speaker,lore[reference][speaker],rng);
+ else if(special&&specials[special][speaker])line+=' '+pick(state,special+speaker,specials[special][speaker],rng);
  else if(kind==='enemyBad'&&speaker==='Goku')line+=' '+pick(state,'gokuDanger',['I’m excited for the challenge, but your odds are worse.','I want a good fight too, but we should prepare first.','That sounds exciting to me. It is still bad news for your chances.','Even a fun challenge needs a plan.'],rng);
  else line+=' '+pick(state,speaker+mood,voices[speaker][mood],rng);
  const result={tile:frame>=8?(frame===9?5:4):frame%4,frame,tag,speaker,text:line,benefit:s.id==='enemyLevel'?(score<3?'bad':score>3?'good':'neutral'):mood};

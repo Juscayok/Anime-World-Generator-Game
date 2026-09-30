@@ -57,7 +57,7 @@ footer>.version-badge:first-child{display:inline-flex;align-items:center;flex-sh
 .portrait-thumb{display:block;padding:0;width:70px;height:80px;min-width:70px;border-color:#7962a6;overflow:hidden;border-radius:8px}
 .portrait-art{position:relative;display:block;width:100%;height:100%;overflow:hidden;isolation:isolate;border-radius:8px}
 .portrait-layer{position:absolute;display:block;background-repeat:no-repeat;pointer-events:none}
-.portrait-base{inset:0;z-index:2}.portrait-outfit{left:0;right:0;top:39%;bottom:0;z-index:3}
+.portrait-base{inset:0;z-index:2}.portrait-outfit{left:0;right:0;top:37%;bottom:0;z-index:3}
 .portrait-equipment{width:95%;height:65%;bottom:0;left:27%;z-index:5;transform:rotate(-9deg)}
 .skin-namekian .portrait-base{filter:sepia(.8) hue-rotate(55deg) saturate(1.6)}.skin-majin .portrait-base{filter:sepia(.65) hue-rotate(275deg) saturate(1.4)}.skin-otherworld .portrait-base{filter:saturate(.4) brightness(1.13)}
 .portrait-aura{position:absolute;inset:6% 10%;z-index:1;border:5px solid currentColor;border-radius:50%;box-shadow:0 0 30px currentColor,inset 0 0 40px currentColor;transform:rotate(-8deg)}
@@ -86,9 +86,16 @@ dialog:has(.battle-scene){width:min(880px,calc(100vw - 24px))}.battle-scene{posi
 .battle-caption{position:absolute;top:12px;left:16px;right:16px;z-index:6;text-align:center;text-shadow:0 2px 6px #000;pointer-events:none}.battle-caption strong{display:block;font:800 clamp(23px,5cqh,35px) 'Segoe UI',sans-serif;letter-spacing:5px;color:#ffe1a0}.player-lost .battle-caption strong{color:#ffc3cb}.battle-caption span{display:block;font-size:13px;color:#fff;margin-top:2px}.battle-details{font-size:13px;text-align:center;color:#c1b4d5;margin:10px 0}.final-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.final-actions button{min-width:0;padding:10px 7px;font-size:13px;letter-spacing:0}.art-missing{display:grid;place-items:center;border:1px dashed #ad9ab9;background:#171c2e;color:#e7deeb;font-size:13px;text-align:center}
 @media(max-width:600px){.battle-scene{height:min(54dvh,380px)}.battle-player{left:5%;width:40cqw;height:74cqh}.battle-opponent{right:-5%;width:70cqw;height:70cqw;bottom:9%}.battle-player.kneeling{left:7%;width:32cqw;height:51cqh}.battle-opponent.kneeling{right:-2%;bottom:9%;width:66cqw;height:66cqw}.battle-caption strong{font-size:26px;letter-spacing:3px}.final-actions{grid-template-columns:1fr 1fr}.final-actions button:last-child{grid-column:1/-1}.battle-details{font-size:12px}}
 @media(max-height:560px){.play:has(.appearance-setup:not([hidden])){grid-template-rows:auto auto minmax(0,1fr) auto auto auto auto}.battle-scene{height:50dvh;min-height:160px}.battle-caption{top:5px}.battle-caption strong{font-size:22px}}
-.portrait-art.female .portrait-outfit{top:42%}
+.portrait-art.female .portrait-outfit{top:40%}
 .battle-opponent{--enemy-height:76cqh;height:var(--enemy-height);max-width:55cqw;right:10%}.battle-opponent.kneeling{--enemy-height:40cqh;right:13%}.battle-opponent.squad.standing{--enemy-height:58cqh;right:5%}
 @media(max-width:600px){.battle-opponent{--enemy-height:67cqh;right:5%;height:var(--enemy-height)}.battle-opponent.kneeling{--enemy-height:36cqh;right:6%;height:var(--enemy-height)}.battle-opponent.squad.standing{--enemy-height:40cqh;right:2%}}
-.battle-player.standing{left:22%}.battle-opponent.kneeling{right:18%}.battle-player.kneeling .portrait-base{transform:rotate(7deg) translateY(3%);transform-origin:50% 45%}
+.battle-player.standing{left:22%}.battle-opponent.kneeling{right:18%}
 @media(max-width:600px){.battle-player.standing{left:7%}.battle-opponent.kneeling{right:6%}}
-.battle-hand{position:absolute;top:90%;width:28%;height:22%;background-image:url('battle-hands.png');background-size:200% 100%;background-repeat:no-repeat;z-index:3;pointer-events:none}.battle-hand.left{left:-5%;background-position:0 0}.battle-hand.right{right:-5%;background-position:100% 0}.battle-hand.namekian{filter:sepia(.8) hue-rotate(55deg) saturate(1.6)}.battle-hand.majin{filter:sepia(.65) hue-rotate(275deg) saturate(1.4)}.battle-hand.otherworld{filter:saturate(.4) brightness(1.13)}
+.battle-hand{position:absolute;top:90%;width:28%;height:22%;background-image:url('battle-hands.png');background-size:200% 100%;background-repeat:no-repeat;z-index:3;pointer-events:none}.battle-hand.hand-left{left:-5%;background-position:0 0}.battle-hand.hand-right{right:-5%;background-position:100% 0}.battle-hand.namekian{filter:sepia(.8) hue-rotate(55deg) saturate(1.6)}.battle-hand.majin{filter:sepia(.65) hue-rotate(275deg) saturate(1.4)}.battle-hand.otherworld{filter:saturate(.4) brightness(1.13)}
+
+/* Crop transparent hand padding in CSS and overlap each wrist with its sleeve.
+   Head, outfit and hands share the same upper-body transform in either pose. */
+.battle-hand{top:95%;width:16%;height:18%;background-size:403% 138%;background-position-y:40%;z-index:0}
+.battle-hand.hand-left{left:0;background-position-x:20.8%;background-position-y:40%}
+.battle-hand.hand-right{right:0;background-position-x:79%;background-position-y:40%}
+.battle-upper .portrait-art{z-index:1}

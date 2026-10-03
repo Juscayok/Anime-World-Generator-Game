@@ -1,3 +1,11 @@
+# Release 1.5
+
+- Earn one gem per newly completed victory, with duplicate-reward protection.
+- Persistent gem shop: one gem buys one bonus reroll, shared across worlds and carried into future runs.
+- Three free rerolls remain available for each new run and are consumed before bonus rerolls.
+- Buy directly from reaction pop-ups; failed storage writes do not spend gems.
+- Visible wallet balance, victory reward message, and updated tutorial/offline packages.
+
 # Release 1.4
 
 - First-visit tutorial with Skip, Back, Next, and replay from Settings.

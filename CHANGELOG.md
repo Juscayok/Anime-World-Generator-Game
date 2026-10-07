@@ -1,3 +1,13 @@
+# Release 1.7
+
+- Added 216 original reaction lines across all 36 hosts.
+- Added 44 power and topic opinion banks with comments from characters familiar with the subject.
+- Added occasional connected two-character conversations with both portraits visible on desktop and mobile.
+- Added individual comments for all 93 enemies after selection, plus paired victory and defeat exchanges.
+- Improved saved dialogue repeat avoidance and conversation cooldowns.
+- Updated app version, cache keys, launcher metadata and offline build configuration to 1.7.
+- See RELEASE-1.7.md for details and validation.
+
 # Release 1.6
 
 - Replaced assembled player parts with cohesive full-body character models: 36 stable identities and 216 poses across nine anime.

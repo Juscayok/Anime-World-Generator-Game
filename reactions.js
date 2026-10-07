@@ -226,13 +226,52 @@ dragonball:[['This isn’t Wano?','Vegeta','Who let this swordsman onto our plan
 const extra=typeof module!=='undefined'?require('./reactions-extra.js'):root.AWGReactionExtra;
 Object.assign(voices,extra.voices);Object.assign(cameoLines,extra.cameos);
 const variety=typeof module!=='undefined'?require('./reaction-variety.js'):root.AWGReactionVariety;
+const expansion=typeof module!=='undefined'?require('./dialogue-expansion.js'):root.AWGDialogueExpansion;
 for(const [name,moods] of Object.entries(variety.voices)){
  if(!voices[name])voices[name]={bad:[],good:[],neutral:[]};
  for(const mood of ['bad','good','neutral'])voices[name][mood].push(...moods[mood]);
 }
+for(const [name,moods] of Object.entries(expansion.voices))for(const mood of ['bad','good','neutral'])voices[name][mood].push(...moods[mood]);
 specials.frieza.Piccolo=['Frieza’s people taught us what careless preparation costs. Keep your guard up.','A Frost demon’s power deserves a plan. I remember Frieza on Namek.'];
 specials.frieza.Bulma=['Frieza again? I am packing extra sensors and an escape vehicle.','A Frost demon like Frieza? I want readings before another planetary incident.'];
-function pick(state,key,list,rng){state.dialogueHistory??=[];let choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>!state.dialogueHistory.includes(x.id));if(!choices.length){const last=state.dialogueHistory.filter(x=>x.startsWith(key+':')).at(-1);state.dialogueHistory=state.dialogueHistory.filter(x=>!x.startsWith(key+':'));choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>list.length===1||x.id!==last);}const choice=choices[Math.floor(rng()*choices.length)%choices.length];state.dialogueHistory.push(choice.id);state.dialogueHistory=state.dialogueHistory.slice(-40);return choice.line;}
+function pick(state,key,list,rng){state.dialogueHistory??=[];state.dialogueLast??={};let choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>!state.dialogueHistory.includes(x.id)&&x.id!==state.dialogueLast[key]);if(!choices.length){state.dialogueHistory=state.dialogueHistory.filter(x=>!x.startsWith(key+':'));choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>list.length===1||x.id!==state.dialogueLast[key]);}const choice=choices[Math.floor(rng()*choices.length)%choices.length];state.dialogueHistory.push(choice.id);state.dialogueHistory=state.dialogueHistory.slice(-100);state.dialogueLast[key]=choice.id;const keys=Object.keys(state.dialogueLast);for(const old of keys.slice(0,Math.max(0,keys.length-160)))delete state.dialogueLast[old];return choice.line;}
+function hostArt(name,pair,mood){const index=pair.indexOf(name),portraitIndex=variety.portraits.indexOf(name);return portraitIndex>=0?{speaker:name,portraitIndex}:{speaker:name,frame:index*4+(mood==='bad'?1:mood==='good'?3:2)};}
+function expandReaction(state,s,r,result,pair,rng){
+ if(result.cameo||result.recognized&&!result.enemySpeaker)return result;
+ const turn=state.reactionCount-1,mood=result.benefit,topic=expansion.findTopic(state,s,r);
+ if(result.enemySpeaker){
+  const persona=expansion.enemyVoices[result.speaker]||expansion.voices[result.speaker]?.neutral;
+  if(persona){const opinion=pick(state,'enemy-personality:'+result.speaker,persona,rng);result.text=expansion.nonverbal.has(result.speaker)?s.id==='win'?pick(state,'enemy-action-outcome:'+result.speaker+':'+r.label,r.label==='VICTORY'?['Your victory leaves the opponent defeated and its attack ended.','The last attack falters; your victory breaks its pressure.']:['Its pressure overcomes your defense and forces your defeat.','Your defense gives way under the opponent’s pressure.'],rng):opinion:result.text+' '+opinion;}
+ }
+ if(topic&&!result.enemySpeaker){
+  const experts=Object.keys(topic.lines).filter(name=>pair.includes(name));
+  const expert=experts.includes(result.speaker)?result.speaker:experts[turn%experts.length];
+  if(expert){const art=hostArt(expert,pair,mood);result.speaker=expert;delete result.portraitIndex;Object.assign(result,{artFrame:art.frame,...(art.portraitIndex===undefined?{}:{portraitIndex:art.portraitIndex})});result.text=(s.label||s.name||s.id)+': '+r.label+'.\n'+pick(state,'opinion:'+topic.world+':'+topic.key+':'+expert,topic.lines[expert],rng);result.knowledge=topic.key;}
+ }
+ // Leave space between exchanges, keep cameos distinct, and retain solo reactions.
+ if(turn<2||turn-(state.lastConversation??-100)<3||rng()>=.28)return result;
+ let lines,key;
+ if(result.enemySpeaker){
+  const companions=pair.filter(name=>name!==result.speaker),host=pick(state,'enemy-companion:'+state.world,companions,rng);
+  const response=pick(state,'enemy-response:'+host+':'+mood,voices[host][mood],rng);
+  lines=[[result.speaker,result.text],[host,(s.id==='enemyLevel'?(mood==='bad'?'That condition helps our opponent. ':mood==='good'?'We have an opening, but this is still a fight. ':'We should plan around the baseline. '):'Against '+result.speaker+', ')+response]];key='enemy:'+result.speaker+':'+s.id;
+ }else if(topic){
+  const candidates=topic.exchanges.filter(x=>new Set(x.map(line=>line[0])).size===2&&x.every(line=>pair.includes(line[0])));
+  const informed=Object.keys(topic.lines).filter(name=>pair.includes(name));
+  if(informed.length>=2)for(const first of topic.lines[informed[0]])for(const second of topic.lines[informed[1]])candidates.push([[informed[0],first+' How would you cover the follow-up?'],[informed[1],second]]);
+  if(candidates.length){lines=pick(state,'exchange:'+state.world+':'+topic.key,candidates,rng);key=topic.key;}
+  else{const experts=Object.keys(topic.lines).filter(name=>pair.includes(name)),first=experts.includes(result.speaker)?result.speaker:experts[0],second=experts.find(name=>name!==first);if(!second)return result;
+   lines=[[first,pick(state,'duo-opinion:'+topic.key+':'+first,topic.lines[first],rng)+' How would you cover the follow-up?'],[second,pick(state,'duo-opinion:'+topic.key+':'+second,topic.lines[second],rng)]];key=topic.key;
+  }
+ }else if(s.id==='win'){key=r.label==='VICTORY'?'win':'loss';lines=pick(state,'outcome-exchange:'+state.world+':'+key,expansion.outcomes[state.world][key],rng);}
+ else{lines=pick(state,'exchange:'+state.world+':general',expansion.exchanges[state.world],rng);key='general';}
+ const participants=[...new Set(lines.map(line=>line[0]))];if(participants.length!==2)return result;
+ const primary=participants[0];if(!result.enemySpeaker){const art=hostArt(primary,pair,mood);result.speaker=primary;delete result.portraitIndex;result.artFrame=art.frame;if(art.portraitIndex!==undefined)result.portraitIndex=art.portraitIndex;}
+ result.partnerArt=hostArt(participants[1],pair,mood);result.speakers=participants;
+ result.conversation={topic:key,lines:lines.map(([speaker,text])=>({speaker,text}))};
+ result.text=(s.label||s.name||s.id)+': '+r.label+'.\n'+lines.map(([name,text])=>name+': '+text).join('\n');state.lastConversation=turn;
+ return result;
+}
 function react(state,s,r,pairs,rng=Math.random){
  const pair=pairs[state.world],turn=state.reactionCount||0;state.reactionCount=turn+1;
  const selected=state.results.findLast(x=>x.id==='enemy')?.label;
@@ -279,7 +318,7 @@ function react(state,s,r,pairs,rng=Math.random){
  }
  const eligible=!enemyTurn&&!named&&pair.indexOf(speaker)<2&&s.id!=='win'&&state.world!=='onepiece'&&turn>=2&&turn-(state.lastZoroCameo??-100)>=8;
  if(eligible&&rng()<.05){const exchange=pick(state,'cameo'+state.world,cameoLines[state.world].filter(x=>x[1]===speaker),rng);state.lastZoroCameo=turn;result.cameo={guest:'Zoro',host:exchange[1],guestLine:exchange[0],hostLine:exchange[2]};result.frame=pair.indexOf(exchange[1])*4+1;result.speaker=exchange[1];}
- return result;
+ return expandReaction(state,s,r,result,pair,rng);
 }
 root.AWGDialogue={react};if(typeof module!=='undefined')module.exports=root.AWGDialogue;
 })(typeof window!=='undefined'?window:globalThis);

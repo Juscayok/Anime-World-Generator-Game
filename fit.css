@@ -114,5 +114,45 @@ body{grid-template-columns:minmax(0,1fr)}header,main,footer{min-width:0}
 #animeTabs button{flex:0 0 auto}#animeTabs .anime-arrow{width:28px;padding:5px;min-width:28px}
 
 /* Persistent gem wallet and reaction purchases. */
+/* Each figure is a single illustration; its measured aspect ratio is preserved. */
+.portrait-art.cohesive{container-type:size}
+.character-fullbody{position:absolute;left:50%;bottom:2%;height:94%;width:auto;transform:translateX(-50%);background-repeat:no-repeat;pointer-events:none;z-index:2}
+.portrait-thumb .character-fullbody{height:165%;bottom:-65%}
+.skin-namekian .character-fullbody{filter:sepia(.65) hue-rotate(55deg) saturate(1.3)}
+.skin-majin .character-fullbody{filter:sepia(.45) hue-rotate(275deg) saturate(1.25)}
+.skin-otherworld .character-fullbody{filter:saturate(.6) brightness(1.08)}
+.battle-player.cohesive.standing,.battle-player.cohesive.kneeling{width:min(43cqw,48cqh);left:10%;bottom:9%;z-index:3}
+.battle-player.cohesive.kneeling{left:10%;bottom:9%;filter:brightness(.8) saturate(.8) drop-shadow(0 6px 6px #0008)}
+.battle-player.cohesive .portrait-art{background:transparent!important;overflow:visible;border-radius:0}
+.battle-player.cohesive .character-fullbody{height:100%;bottom:0}
+.battle-player.cohesive .portrait-aura{opacity:.2!important}
+.battle-player.cohesive .portrait-form{display:none}
+@media(max-width:600px){.battle-player.cohesive,.battle-player.cohesive.standing,.battle-player.cohesive.kneeling{left:1%;width:47cqw;bottom:9%}}
+/* Stable per-character appearance details; hair tint does not recolor skin. */
+.portrait-hair{inset:0;z-index:3;clip-path:polygon(25% 0,75% 0,85% 21%,71% 27%,69% 16%,31% 16%,28% 27%,15% 21%)}
+.portrait-detail{position:absolute;z-index:6;pointer-events:none}
+.portrait-detail.scar{top:23%;left:57%;width:1%;height:6%;background:#af6264;transform:rotate(-20deg)}
+.portrait-detail.earring{top:30%;left:69%;width:3%;height:4%;border:2px solid #e9cc79;border-radius:50%}
+.portrait-detail.headband{top:17%;left:32%;width:36%;height:3%;background:#313955;border:1px solid #9ca7be;border-radius:3px}
+/* The upper body ends at the waist; legs occupy over half of standing height. */
+.battle-player.standing{width:min(27cqw,31cqh);height:80cqh;bottom:9%}
+.battle-player.standing .battle-upper{height:49%;left:0;right:0}
+.battle-player.standing .battle-legs{height:54%;width:152%;left:-26%}
+.battle-player.build-slender{width:min(25cqw,29cqh)}
+.battle-player.build-broad{width:min(29cqw,33cqh)}
+.battle-player.pose-relaxed .battle-upper{transform:rotate(-3deg);transform-origin:50% 95%}
+.battle-player.pose-relaxed .battle-legs{transform:skewX(-3deg);transform-origin:50% 0}
+.battle-player.pose-resolute .battle-upper{transform:rotate(3deg);transform-origin:50% 95%}
+.battle-player.pose-resolute .battle-hand.hand-right{transform:rotate(-20deg)}
+.battle-player.pose-bowed .battle-upper{transform:rotate(17deg) translateY(10%);transform-origin:50% 100%}
+.battle-player.pose-exhausted .battle-upper{transform:rotate(-13deg) translateY(12%);transform-origin:50% 100%}
+.battle-player.pose-exhausted .battle-legs{transform:skewX(-8deg);transform-origin:50% 0}
+.battle-player.kneeling .battle-legs{height:40%}
+.battle-player.pose-bowed{height:51cqh}
+.battle-player.pose-bowed .battle-legs{height:36%}
+.battle-player.pose-exhausted .battle-legs{height:46%;transform:none}
+.reaction-image.enemy-reaction{background-repeat:no-repeat;aspect-ratio:1;max-height:240px;width:auto;margin:auto}
+.reaction-image.new-speaker{aspect-ratio:3/4;width:auto;max-height:240px;margin:auto;background-repeat:no-repeat}
+@media(max-width:600px){.battle-player.standing{width:30cqw;height:76cqh;left:10%}.battle-player.build-slender{width:28cqw}.battle-player.build-broad{width:32cqw}}
 #gemShop{color:#8de8ff;white-space:nowrap}.gem-reward{font-size:13px;color:#8de8ff;text-align:center;margin:10px 0 0}.reaction-modal-actions{flex-wrap:wrap}#buyReactionReroll{grid-column:1/-1;flex-basis:100%;padding:7px;font-size:12px;color:#8de8ff}
 @media(max-width:500px){header{gap:5px}.brand{font-size:11px;gap:5px}.header-actions{gap:3px}.header-actions button{padding:7px}#gemShop{font-size:12px}}

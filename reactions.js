@@ -225,10 +225,20 @@ dragonball:[['This isn’t Wano?','Vegeta','Who let this swordsman onto our plan
 };
 const extra=typeof module!=='undefined'?require('./reactions-extra.js'):root.AWGReactionExtra;
 Object.assign(voices,extra.voices);Object.assign(cameoLines,extra.cameos);
+const variety=typeof module!=='undefined'?require('./reaction-variety.js'):root.AWGReactionVariety;
+for(const [name,moods] of Object.entries(variety.voices)){
+ if(!voices[name])voices[name]={bad:[],good:[],neutral:[]};
+ for(const mood of ['bad','good','neutral'])voices[name][mood].push(...moods[mood]);
+}
+specials.frieza.Piccolo=['Frieza’s people taught us what careless preparation costs. Keep your guard up.','A Frost demon’s power deserves a plan. I remember Frieza on Namek.'];
+specials.frieza.Bulma=['Frieza again? I am packing extra sensors and an escape vehicle.','A Frost demon like Frieza? I want readings before another planetary incident.'];
 function pick(state,key,list,rng){state.dialogueHistory??=[];let choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>!state.dialogueHistory.includes(x.id));if(!choices.length){const last=state.dialogueHistory.filter(x=>x.startsWith(key+':')).at(-1);state.dialogueHistory=state.dialogueHistory.filter(x=>!x.startsWith(key+':'));choices=list.map((line,i)=>({line,id:key+':'+i})).filter(x=>list.length===1||x.id!==last);}const choice=choices[Math.floor(rng()*choices.length)%choices.length];state.dialogueHistory.push(choice.id);state.dialogueHistory=state.dialogueHistory.slice(-40);return choice.line;}
 function react(state,s,r,pairs,rng=Math.random){
- const pair=pairs[state.world],turn=state.reactionCount||0,speaker=pair[turn%2];state.reactionCount=turn+1;
- const enemy=state.results.find(x=>x.id==='enemy')?.label||'your enemy';
+ const pair=pairs[state.world],turn=state.reactionCount||0;state.reactionCount=turn+1;
+ const selected=state.results.findLast(x=>x.id==='enemy')?.label;
+ const enemy=s.id==='enemy'?r.label:selected||'your enemy';
+ const enemyTurn=!!enemy&&enemy!=='your enemy'&&(s.id==='enemy'||(selected&&turn%2===0));
+ const speaker=enemyTurn?enemy:pair[turn%pair.length];
  let score=r.score,kind=s.neutral?'neutral':'stat',tag='',frame;
  if(s.id==='enemyLevel'){score=r.label==='Weakened'?5:r.label==='Base form'?3:1;kind=score<3?'enemyBad':score>3?'enemyGood':'enemyNeutral';tag=score<3?'ENEMY ADVANTAGE':score>3?'OPENING FOR YOU':'STAY ALERT';}
  else if(s.id==='enemy'){score=r.score>=4?2:3;kind='enemy';tag=r.score>=4?'DANGEROUS OPPONENT':'OPPONENT REVEALED';}
@@ -250,12 +260,24 @@ function react(state,s,r,pairs,rng=Math.random){
  if(reference)line+=' '+pick(state,'lore'+reference+speaker,lore[reference][speaker],rng);
  else if(special&&specials[special][speaker])line+=' '+pick(state,special+speaker,specials[special][speaker],rng);
  else if(kind==='enemyBad'&&speaker==='Goku')line+=' '+pick(state,'gokuDanger',['I’m excited for the challenge, but your odds are worse.','I want a good fight too, but we should prepare first.','That sounds exciting to me. It is still bad news for your chances.','Even a fun challenge needs a plan.'],rng);
- else line+=' '+pick(state,speaker+mood,voices[speaker][mood],rng);
+ else line+=' '+pick(state,speaker+mood,(voices[speaker]||variety.voices[pair[0]])[mood],rng);
  const result={tile:frame>=8?(frame===9?5:4):frame%4,frame,tag,speaker,text:line,benefit:s.id==='enemyLevel'?(score<3?'bad':score>3?'good':'neutral'):mood};
- const named=pair.find(name=>extra.personal[name].aliases.some(alias=>r.label.toLowerCase()===alias.toLowerCase()));
+ const named=pair.find(name=>extra.personal[name]?.aliases.some(alias=>r.label.toLowerCase()===alias.toLowerCase()));
  if(named){const p=extra.personal[named];const own=s.id==='enemy'?pick(state,'self'+named,p.own,rng):pick(state,'selfOther'+named,['That is my name on your roll. Let’s see what you do with it.','You got my name? Now I am paying attention.'],rng)+' '+pick(state,'selfVoice'+named,voices[named].neutral,rng);const partner=s.id==='enemy'?pick(state,'partner'+named,p.partner,rng):pair.find(n=>n!==named)+': '+pick(state,'otherPartner'+named,voices[pair.find(n=>n!==named)].neutral,rng);result.text=(s.id==='enemy'?'The wheel chose '+named+' as your opponent.':s.label+': '+r.label+'.')+'\n'+named+': '+own+'\n'+partner;result.speaker=pair.join(' & ');result.frame=score<=2?9:8;result.recognized=named;}
  // Cosmetic only: the cameo never changes a roll, score, or combat odds.
- const eligible=!named&&s.id!=='win'&&state.world!=='onepiece'&&turn>=2&&turn-(state.lastZoroCameo??-100)>=8;
+ if(enemyTurn){
+  const roster=(typeof module!=='undefined'?require('./battle.js'):root.AWGBattle).roster[state.world];
+  const index=roster.indexOf(enemy),trait=variety.enemyTraits[state.world][index]||'my next attack';
+  const openings={enemy:['So you drew me. Prepare for '+trait+'.','You are facing '+trait+'. Show me your plan.','We have our matchup. I will make you work for every opening.'],enemyLevel:r.label==='Weakened'?['I am weakened, but '+trait+' can still catch you.','Take the opening if you can. I can still counter.','My condition gives you an advantage. Do not waste it.']:['At '+r.label+', you will need an answer to '+trait+'.','You know my condition. Now show me your preparation.','I am bringing '+trait+' to this fight. Stay alert.'],field:['At '+r.label+', watch the space around '+trait+'.','This battlefield changes our approach. I am watching your footing.','Use the terrain if you like. I am planning around it too.'],advantage:['Your starting condition is '+r.label+'. Let’s see how you adapt.','I noticed your preparation. Can it handle '+trait+'?','The opening exchange will test that setup.'],win:r.label==='VICTORY'?['You won this round. You found an answer to '+trait+'.','I lost the exchange. Your preparation paid off.','You earned that victory. I will remember your approach.']:['I won this round. Train an answer to '+trait+'.','My pressure found the gap in your defense.','The battle is mine. Learn from the opening I used.']};
+  result.text=pick(state,'enemy:'+enemy+':'+s.id,openings[s.id]||['You rolled '+r.label+'. I am measuring it against '+trait+'.','That part of your build changes how I approach you.','Show me how '+r.label+' holds up under pressure.'],rng);
+  result.speaker=enemy;result.enemySpeaker=true;result.enemyIndex=index;result.recognized=s.id==='enemy'?enemy:undefined;delete result.cameo;
+ }else{
+  const topics=s.id.startsWith('mastery')?'mastery':s.id.startsWith('ability')?'ability':s.id;
+  const details={origin:['Your '+r.label+' background is only the beginning.','A '+r.label+' still has to choose what to stand for.'],tool:['Try the balance of '+r.label+' before the fight.','Practice a recovery after each move with '+r.label+'.'],ability:['Test the range of '+r.label+' before trusting it.','Build a combination around '+r.label+' instead of using it alone.'],mastery:['Practice your timing under pressure.','Consistency matters when the first attempt fails.'],field:['At '+r.label+', keep a route back to your team.','Use '+r.label+' to control where the exchange happens.'],win:r.label==='VICTORY'?['You earned a rest after that victory.','Remember which preparation made the difference.']:['We can review the mistake and train again.','A defeat gives us a specific gap to work on.']};
+  if(details[topics])result.text+=' '+pick(state,'detail:'+speaker+':'+topics,details[topics],rng);
+  const portrait=variety.portraits.indexOf(speaker);if(portrait>=0)result.portraitIndex=portrait;
+ }
+ const eligible=!enemyTurn&&!named&&pair.indexOf(speaker)<2&&s.id!=='win'&&state.world!=='onepiece'&&turn>=2&&turn-(state.lastZoroCameo??-100)>=8;
  if(eligible&&rng()<.05){const exchange=pick(state,'cameo'+state.world,cameoLines[state.world].filter(x=>x[1]===speaker),rng);state.lastZoroCameo=turn;result.cameo={guest:'Zoro',host:exchange[1],guestLine:exchange[0],hostLine:exchange[2]};result.frame=pair.indexOf(exchange[1])*4+1;result.speaker=exchange[1];}
  return result;
 }

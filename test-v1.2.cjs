@@ -3,8 +3,8 @@ const {setup}=require('./test-mobile.cjs');
 assert.equal(Object.keys(G.worlds).length,9);
 for(const world of Object.keys(G.worlds)){
  const s=G.fresh(world),enemy=s.queue.find(x=>x.id==='enemy');
- for(const name of G.reactionPairs[world]){assert(enemy.options.some(x=>x.label===name),world+' can roll '+name);const r=G.reaction(s,enemy,enemy.options.find(x=>x.label===name),()=>.5);assert.equal(r.recognized,name);for(const who of G.reactionPairs[world])assert(r.text.includes(who+':'));assert(!r.cameo);}
- if(world!=='onepiece')for(let turn=2;turn<4;turn++){s.reactionCount=turn;s.lastZoroCameo=-100;const step=s.queue.find(x=>x.id==='speed');const r=G.reaction(s,step,step.options[0],()=>0);assert(r.cameo);assert.equal(r.cameo.host,G.reactionPairs[world][turn%2]);}
+ for(const name of G.reactionPairs[world].slice(0,2)){assert(enemy.options.some(x=>x.label===name),world+' can roll '+name);const r=G.reaction(s,enemy,enemy.options.find(x=>x.label===name),()=>.5);assert.equal(r.recognized,name);assert(r.enemySpeaker);assert.equal(r.speaker,name);assert(!r.cameo);}
+ if(world!=='onepiece')for(let turn=4;turn<6;turn++){s.reactionCount=turn;s.lastZoroCameo=-100;const step=s.queue.find(x=>x.id==='speed');const r=G.reaction(s,step,step.options[0],()=>0);assert(r.cameo);assert.equal(r.cameo.host,G.reactionPairs[world][turn%2]);}
  assert(fs.statSync('reactions-'+world+'.png').size>1000);
 }
 const aot=G.fresh('aot');const titan=aot.queue.find(s=>s.label==='Titan form');assert.equal(titan.requires,'Titan shifter');

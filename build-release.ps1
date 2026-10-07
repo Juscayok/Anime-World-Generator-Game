@@ -9,7 +9,7 @@ New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 $executablePath = Join-Path $outputDirectory ('Anime World Generator ' + $releaseVersion + '.exe')
 $assets = @('index.html','style.css','fit.css','game.js','reactions.js','app.js','icon.svg','icon.ico',
     'reactions-jjk.png','reactions-naruto.png','reactions-onepiece.png','reactions-bleach.png','reactions-dragonball.png','reactions-fairytail.png','reactions-mha.png','reactions-aot.png','reactions-hxh.png',
-    'worlds-extra.js','reactions-extra.js','portrait.js','portrait-atlas.png','portrait-female.png','battle-legs.png','battle-hands.png','battle.js','battle-art.js',
+    'reaction-variety.js','reaction-cast-v2.png','worlds-extra.js','reactions-extra.js','character-art.js','character-models-jjk.png','character-models-naruto.png','character-models-onepiece.png','character-models-bleach.png','character-models-dragonball.png','character-models-fairytail.png','character-models-mha.png','character-models-aot.png','character-models-hxh.png','portrait.js','portrait-atlas.png','portrait-female.png','battle-poses-v2.png','battle-legs.png','battle-hands.png','battle.js','battle-art.js',
     'battle-enemies-jjk.png','battle-enemies-naruto.png','battle-enemies-onepiece.png','battle-enemies-bleach.png','battle-enemies-dragonball.png','battle-enemies-fairytail.png','battle-enemies-mha.png','battle-enemies-aot.png','battle-enemies-hxh.png')
 $compilerArguments = @('/nologo','/target:winexe','/platform:anycpu','/optimize+',
     '/reference:System.Windows.Forms.dll',('/win32icon:' + (Join-Path $projectRoot 'icon.ico')),('/out:' + $executablePath))

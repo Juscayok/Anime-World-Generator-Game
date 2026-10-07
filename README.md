@@ -2,6 +2,10 @@
 
 **Version 1.5** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
 
+The character variety update adds two reaction hosts per anime, more original dialogue, and reactions from the actual enemy beginning with their selection roll. Rerolling an opponent replaces that enemy's reveal; after Continue, only the accepted enemy joins the remaining battle reactions. New hosts are Nobara/Nanami, Sakura/Kakashi, Nami/Sanji, Renji/Urahara, Piccolo/Bulma, Gray/Erza, Todoroki/Uraraka, Levi/Armin, and Kurapika/Leorio. The player now uses one cohesive full-body illustration, with the head, neck, outfit and limbs drawn together. Each anime has two male and two female variants with three victory and three defeat poses. Existing saves resolve a stable variant on reopening.
+
+Run `node test-variety.cjs` for dialogue checks and `node test-cohesive.cjs` for all 36 whole-body identities and 216 pose frames. Open `http://127.0.0.1:4189/qa-variety.html` with the preview server running to inspect all male/female pose variants and the new reaction cast. Asset prompts and layout details are in [ART-VARIETY.md](ART-VARIETY.md) and [ART-COHESIVE.md](ART-COHESIVE.md).
+
 ![Anime World Generator gameplay](updated-gui.png)
 
 Choose an anime and discover your identity, exact age, powers, mastery, stats, and final opponent. Earlier results unlock extra wheels, so every run creates a different build.
@@ -10,15 +14,15 @@ Choose an anime and discover your identity, exact age, powers, mastery, stats, a
 
 | Anime | Reaction characters | Power system |
 | --- | --- | --- |
-| Jujutsu Kaisen | Yuji & Gojo | Cursed energy and cursed techniques |
-| Naruto | Naruto & Sasuke | Chakra and signature jutsu |
-| One Piece | Luffy & Zoro | Signature moves, Devil Fruits, and Haki |
-| Bleach | Ichigo & Rukia | Spiritual pressure and spiritual techniques |
-| Dragon Ball | Goku & Vegeta | Ki and signature techniques |
-| Fairy Tail | Natsu & Lucy | Magic, guild bonds, and spells |
-| My Hero Academia | Deku & Bakugo | Quirks, drawbacks, and support equipment |
-| Attack on Titan | Eren & Mikasa | ODM combat, squad skills, and conditional Titan forms |
-| Hunter × Hunter | Gon & Killua | Nen, restrictions, aura, and abilities |
+| Jujutsu Kaisen | Yuji, Gojo, Nobara & Nanami | Cursed energy and cursed techniques |
+| Naruto | Naruto, Sasuke, Sakura & Kakashi | Chakra and signature jutsu |
+| One Piece | Luffy, Zoro, Nami & Sanji | Signature moves, Devil Fruits, and Haki |
+| Bleach | Ichigo, Rukia, Renji & Urahara | Spiritual pressure and spiritual techniques |
+| Dragon Ball | Goku, Vegeta, Piccolo & Bulma | Ki and signature techniques |
+| Fairy Tail | Natsu, Lucy, Gray & Erza | Magic, guild bonds, and spells |
+| My Hero Academia | Deku, Bakugo, Todoroki & Uraraka | Quirks, drawbacks, and support equipment |
+| Attack on Titan | Eren, Mikasa, Levi & Armin | ODM combat, squad skills, and conditional Titan forms |
+| Hunter × Hunter | Gon, Killua, Kurapika & Leorio | Nen, restrictions, aura, and abilities |
 
 ## Features
 
@@ -32,10 +36,10 @@ The game also includes player-aware enemy verdicts, expanded character-specific 
 - **Exact-age generation:** spin an age range, then a specific year. Ancient characters receive an additional range wheel.
 - **Multiple techniques:** roll your technique count, then discover each unique technique and its mastery separately.
 - **Detailed stats:** energy reserves, control, output, recovery, strength, durability, speed, stamina, reflexes, combat skill, weapon skill, IQ, and battle IQ.
-- **Contextual meme reactions:** two characters per anime alternate reactions, with duo reactions for special results and battle outcomes.
+- **Contextual meme reactions:** four hosts per anime rotate reactions, with the selected opponent joining after its reveal, with duo reactions for special results and battle outcomes.
 - **Three rerolls per run:** take another chance before accepting a result.
 - **Weighted final battles:** your build, enemy, enemy condition, and starting advantage affect your victory odds.
-- **Evolving portraits:** locally composed artwork previews pending rolls and updates age, world outfit, affiliation tint, origin coloring, equipment motifs, and power effects. Click the portrait to enlarge it. Saved builds reconstruct the same illustration; no runtime AI service or key is needed. The illustration represents supported visual traits, not an exact drawing of every power or creature anatomy.
+- **Cohesive portraits:** complete full-body artwork preserves the same identity across normal portraits, victory and defeat scenes. Appearance variants are stable across reloads. Origin tint and power auras evolve with rolls; exact age, equipment, powers and creature anatomy remain on the character sheet rather than being drawn literally.
 - **Delete saved characters:** each library entry has a Delete button and confirmation. Cancel keeps it; deleting does not replace your active run.
 - **Local autosave:** resume a run and keep up to 50 completed characters.
 - **Character downloads:** export a build as a readable text file.

@@ -13,6 +13,8 @@ const worlds={
 };
 const extra=typeof module!=='undefined'?require('./worlds-extra.js'):root.AWGExtra;
 Object.assign(worlds,extra.worlds);Object.assign(reactionPairs,extra.pairs);
+const variety=typeof module!=='undefined'?require('./reaction-variety.js'):root.AWGReactionVariety;
+for(const [world,names] of Object.entries(variety.additions))reactionPairs[world].push(...names);
 worlds.naruto.enemies.splice(7,0,'Sasuke');worlds.onepiece.enemies.splice(8,0,'Luffy');worlds.bleach.enemies.splice(2,0,'Rukia');
 const options=list=>list.map((x,i)=>typeof x==='string'?{label:x,weight:1,score:3}:{label:x[0],weight:x[1],score:x[2]});
 function step(id,label,chapter,list,extra={}){return{id,label,chapter,options:options(list),...extra};}

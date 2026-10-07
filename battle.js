@@ -14,11 +14,12 @@ function render(target,run){
  const d=describe(run);target.replaceChildren();target.className='battle-scene';
  if(!d){const empty=document.createElement('p');empty.textContent='Complete the final battle to reveal this scene.';target.append(empty);return null;}
  const field={'City ruins':'city','Open plains':'plains','Dense forest':'forest','Underground arena':'arena','Mountain summit':'mountain'}[d.field]||'plains';
- target.className='battle-scene '+field+(d.won?' player-won':' player-lost');target.setAttribute('role','img');target.setAttribute('aria-label',(d.won?'Your character stands victorious over defeated ':'Your character kneels defeated beneath ')+d.enemy+'. '+d.field+'. Opponent condition: '+d.condition+'.');
+ target.className='battle-scene '+field+(d.won?' player-won':' player-lost');target.setAttribute('role','img');target.setAttribute('aria-label',(d.won?'Your character stands victorious over defeated ':'Your character rests defeated beneath ')+d.enemy+'. '+d.field+'. Opponent condition: '+d.condition+'.');
  const ground=document.createElement('span');ground.className='battle-ground';target.append(ground);
- const player=document.createElement('div');player.className='battle-player '+(d.won?'standing':'kneeling');
- const legs=document.createElement('span');legs.className='battle-legs';const legTile=(d.won?0:2)+(d.gender==='female'?1:0);legs.style.backgroundPosition=(legTile%2*100)+'% '+Math.floor(legTile/2)*100+'%';player.append(legs);
- const upper=document.createElement('div');upper.className='battle-upper';const art=document.createElement('div');const portrait=root.AWGPortrait.render(art,run,false);upper.append(art);for(const side of ['left','right']){const hand=document.createElement('span');hand.className='battle-hand hand-'+side+' '+portrait.skin;upper.append(hand);}player.append(upper);target.append(player);
+ const p=root.AWGPortrait.describe(run,false),pose=(d.won?0:3)+p.seed%3;
+ const m=root.AWGPortrait.model(run,pose),player=document.createElement('div');player.className='battle-player cohesive '+(d.won?'standing':'kneeling');
+ player.style.height=Math.min(86,76*m.relativeHeight)+'cqh';
+ const art=document.createElement('div');root.AWGPortrait.render(art,run,false,{pose});player.append(art);target.append(player);
  const opponent=document.createElement('div');opponent.className='battle-opponent '+(d.won?'kneeling':'standing');opponent.setAttribute('aria-label',d.enemy+(d.won?' defeated':' victorious'));opponent.setAttribute('data-opponent',d.enemy);
  if(d.tile!==null){opponent.style.backgroundImage="url('"+d.sheet+"')";const atlas=artwork[run.world],rect=atlas.frames[d.tile];if(rect){const [x,y,w,h]=rect;opponent.style.backgroundSize=(atlas.width/w*100)+'% '+(atlas.height/h*100)+'%';opponent.style.backgroundPosition=(x/(atlas.width-w)*100)+'% '+(y/(atlas.height-h)*100)+'%';opponent.style.width='calc(var(--enemy-height) * '+(w/h)+')';}if(d.enemy.includes('squad'))opponent.className+=' squad';}
  else{opponent.className+=' art-missing';opponent.textContent='Artwork unavailable: '+d.enemy;}

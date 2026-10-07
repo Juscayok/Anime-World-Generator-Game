@@ -25,8 +25,12 @@ Use case: stylized-concept. Asset type: transparent sprite atlas for anime game 
 
 ## Reaction style revision
 
-Active asset: reaction-cast-v3.png (1536 x 1024), replacing v2 in the app and release packaging. The previous atlas remains as a source reference. Generated with built-in imagegen using reactions-fairytail.png (Natsu/Lucy), reactions-dragonball.png (Goku/Vegeta), and reaction-cast-v2.png as references.
+Version 1.8 asset: reaction-cast-v3.png (1536 x 1024), replacing v2 in the app and release packaging. The previous atlas remains as a source reference. Generated with built-in imagegen using reactions-fairytail.png (Natsu/Lucy), reactions-dragonball.png (Goku/Vegeta), and reaction-cast-v2.png as references.
 
 Prompt: Redraw all 18 characters in the same order and costumes as v2, matching the original sheets' expressive chibi busts: large round heads, compact torsos, bold dark outlines, saturated cel shading, playful expressions and dark navy/purple backgrounds. Strict six-column, three-row grid; no text or borders. Use each character's recognizable hairstyle, outfit and accessories.
 
 Measured row boundaries are 0,338,656,1024; columns are 256 pixels wide. App and both preview pages crop those exact rows so neighboring artwork stays outside the frame. Desktop/mobile solo and paired routing retain the same character indices.
+
+## Expression update in version 1.10
+
+The app now uses reaction-expressions-1.png through reaction-expressions-3.png, containing four expression variants per newer host. See ART-EXPRESSIONS.md and ART-EXPRESSIONS-PROMPTS.json for the assets, prompts and routing. The earlier single-expression atlas remains a historical reference.

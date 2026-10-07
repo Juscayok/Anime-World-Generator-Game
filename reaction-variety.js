@@ -39,6 +39,9 @@ mha:['sticky restraints','Engine-powered rushes','gravity and momentum','hardene
 aot:['a dangerous Titan approach','unpredictable Titan movement','coordinated armed soldiers','a coordinated Warrior formation','fast jaws and claws','precise ODM attacks','armored Titan defenses','Attack Titan pressure','long-range thrown projectiles','heat and enormous reach'],
 hxh:['deception before the fight','explosive Nen traps','Jajanken commitments','electric speed','aura-debt pressure','swift sword attacks','Bungee Gum traps','stolen Nen abilities','overwhelming aura and speed','adaptation and enormous aura']};
 const portraits=Object.values(additions).flat();
-root.AWGReactionVariety={additions,voices,signatures,enemyTraits,portraits};
+const expressionNames=['Crying','Thoughtful','Approving','Celebrating'];
+const expressionAtlases=[1,2,3].map(group=>({file:'reaction-expressions-'+group+'.png',width:1536,height:1024,columns:[0,256,512,768,1024,1280,1536],rows:[0,256,512,768,1024]}));
+function portraitStyle(index,expression=1){const a=expressionAtlases[Math.floor(index/6)];if(!a||!Number.isInteger(index)||index<0||index>=portraits.length)return null;const col=index%6,row=Number.isInteger(expression)?Math.max(0,Math.min(3,expression)):1,x=a.columns[col],y=a.rows[row],w=a.columns[col+1]-x,h=a.rows[row+1]-y;return {backgroundImage: "url('"+a.file+"')",backgroundSize:(a.width/w*100)+'% '+(a.height/h*100)+'%',backgroundPosition:(x/(a.width-w)*100)+'% '+(y/(a.height-h)*100)+'%',aspectRatio:w+'/'+h};}
+root.AWGReactionVariety={additions,voices,signatures,enemyTraits,portraits,expressionNames,expressionAtlases,portraitStyle};
 if(typeof module!=='undefined')module.exports=root.AWGReactionVariety;
 })(typeof window!=='undefined'?window:globalThis);

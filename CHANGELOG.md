@@ -1,3 +1,11 @@
+# Release 1.8
+
+- Redrew all 18 new reaction hosts to match the original Natsu, Lucy, Goku and Vegeta artwork.
+- Matched expressive chibi proportions, bold outlines, saturated cel shading and navy/purple backgrounds.
+- Corrected atlas cropping for solo and paired reactions on desktop and mobile.
+- Updated app version, cache keys, Windows launcher and offline packages to 1.8.
+- See RELEASE-1.8.md for downloads and validation.
+
 # Release 1.7
 
 - Added 216 original reaction lines across all 36 hosts.

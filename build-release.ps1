@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
 $releaseVersion = (Get-Content -LiteralPath (Join-Path $projectRoot 'VERSION') -Raw).Trim()
-if ($releaseVersion -ne '1.7') { throw 'Update launcher version metadata before building a different release.' }
+if ($releaseVersion -ne '1.8') { throw 'Update launcher version metadata before building a different release.' }
 $compilerPath = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 if (-not (Test-Path -LiteralPath $compilerPath)) { throw 'The Windows .NET Framework C# compiler is required to build.' }
 $outputDirectory = Join-Path $projectRoot 'dist'
@@ -9,7 +9,7 @@ New-Item -ItemType Directory -Path $outputDirectory -Force | Out-Null
 $executablePath = Join-Path $outputDirectory ('Anime World Generator ' + $releaseVersion + '.exe')
 $assets = @('index.html','style.css','fit.css','game.js','reactions.js','app.js','icon.svg','icon.ico',
     'reactions-jjk.png','reactions-naruto.png','reactions-onepiece.png','reactions-bleach.png','reactions-dragonball.png','reactions-fairytail.png','reactions-mha.png','reactions-aot.png','reactions-hxh.png',
-    'dialogue-expansion.js','reaction-variety.js','reaction-cast-v2.png','worlds-extra.js','reactions-extra.js','character-art.js','character-models-jjk.png','character-models-naruto.png','character-models-onepiece.png','character-models-bleach.png','character-models-dragonball.png','character-models-fairytail.png','character-models-mha.png','character-models-aot.png','character-models-hxh.png','portrait.js','portrait-atlas.png','portrait-female.png','battle-poses-v2.png','battle-legs.png','battle-hands.png','battle.js','battle-art.js',
+    'dialogue-expansion.js','reaction-variety.js','reaction-cast-v3.png','worlds-extra.js','reactions-extra.js','character-art.js','character-models-jjk.png','character-models-naruto.png','character-models-onepiece.png','character-models-bleach.png','character-models-dragonball.png','character-models-fairytail.png','character-models-mha.png','character-models-aot.png','character-models-hxh.png','portrait.js','portrait-atlas.png','portrait-female.png','battle-poses-v2.png','battle-legs.png','battle-hands.png','battle.js','battle-art.js',
     'battle-enemies-jjk.png','battle-enemies-naruto.png','battle-enemies-onepiece.png','battle-enemies-bleach.png','battle-enemies-dragonball.png','battle-enemies-fairytail.png','battle-enemies-mha.png','battle-enemies-aot.png','battle-enemies-hxh.png')
 $compilerArguments = @('/nologo','/target:winexe','/platform:anycpu','/optimize+',
     '/reference:System.Windows.Forms.dll',('/win32icon:' + (Join-Path $projectRoot 'icon.ico')),('/out:' + $executablePath))
@@ -22,7 +22,7 @@ $compilerArguments += Join-Path $projectRoot 'launcher\Program.cs'
 & $compilerPath @compilerArguments
 if ($LASTEXITCODE -ne 0) { throw 'Executable compilation failed.' }
 
-$verificationDirectory = Join-Path $projectRoot 'build\verify-1.7'
+$verificationDirectory = Join-Path $projectRoot 'build\verify-1.8'
 $verificationArguments = '--verify-extract "' + $verificationDirectory + '"'
 $verification = Start-Process -FilePath $executablePath -ArgumentList $verificationArguments -Wait -PassThru -WindowStyle Hidden
 if ($verification.ExitCode -ne 0) { throw 'Executable extraction verification failed.' }
@@ -34,12 +34,12 @@ foreach ($asset in $assets) {
 
 $releaseReadme = Join-Path $outputDirectory 'READ ME.txt'
 @'
-ANIME WORLD GENERATOR — VERSION 1.7
+ANIME WORLD GENERATOR — VERSION 1.8
 
-Double-click Anime World Generator 1.7.exe to play.
+Double-click Anime World Generator 1.8.exe to play.
 Windows 10 or 11 with a modern default browser is recommended.
 The executable includes all game files and artwork. No installer or internet is needed.
-It extracts the game to %LOCALAPPDATA%\AnimeWorldGenerator\1.7 and opens index.html in your browser.
+It extracts the game to %LOCALAPPDATA%\AnimeWorldGenerator\1.8 and opens index.html in your browser.
 The launcher uses the .NET Framework supplied with modern Windows.
 
 You can share the EXE by itself or this ZIP. Browser saves are personal to each player;

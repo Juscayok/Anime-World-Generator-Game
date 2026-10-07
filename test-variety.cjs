@@ -24,7 +24,7 @@ for(const [world,w] of Object.entries(G.worlds)){
  const varied=G.fresh(world),lines=[];for(let n=0;n<28;n++)lines.push(G.reaction(varied,{id:'tool',label:'Weapon'},{label:'Sword',score:4},()=>.5).text);assert(new Set(lines).size>=20);
 }
 for(const mobile of [false,true]){
- const t=setup(mobile);t.run("state.reactionCount=2;state.reaction=G.reaction(state,{id:'strength'},{label:'High',score:4},()=>.5);render()");assert.match(t.get('reactionImage').style.backgroundImage,/reaction-cast-v2/);
+ const t=setup(mobile);t.run("state.reactionCount=2;state.reaction=G.reaction(state,{id:'strength'},{label:'High',score:4},()=>.5);render()");assert.match(t.get('reactionImage').style.backgroundImage,/reaction-cast-v3/);
  t.run("state.results.push({id:'enemy',label:'Sukuna'});state.reactionCount=2;state.pending={label:'Prime',score:7};state.reaction=G.reaction(state,{id:'enemyLevel'},state.pending,()=>.5);render();showMobileReaction()");assert.match(t.get('reactionImage').style.backgroundImage,/battle-enemies-jjk/);if(mobile)assert.equal(t.get('mobileArt').style.backgroundImage,t.get('reactionImage').style.backgroundImage);
 }
 const appearances=new Set();for(let n=0;n<100;n++){const s=G.fresh('jjk');s.id='appearance-'+n;const p=P.describe(s);assert.deepEqual(P.describe(JSON.parse(JSON.stringify(s))),p);appearances.add(P.model(s).row);}assert.equal(appearances.size,2);

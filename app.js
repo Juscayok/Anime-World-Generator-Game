@@ -56,7 +56,7 @@ function applySpeakerArt(el,r){
   const atlas=AWGBattleArt[state.world],rect=atlas.frames[r.enemyIndex];
   if(rect){const [x,y,w,h]=rect;el.style.backgroundImage=`url('battle-enemies-${state.world}.png')`;el.style.backgroundSize=`${atlas.width/w*100}% ${atlas.height/h*100}%`;el.style.backgroundPosition=`${x/(atlas.width-w)*100}% ${y/(atlas.height-h)*100}%`;el.style.aspectRatio=w+'/'+h;el.classList.add('enemy-reaction');}
  }else if(Number.isInteger(r.portraitIndex)){
-  el.style.backgroundImage="url('reaction-cast-v2.png')";el.style.backgroundSize='600% 300%';el.style.backgroundPosition=`${r.portraitIndex%6*20}% ${Math.floor(r.portraitIndex/6)*50}%`;el.style.aspectRatio='3/4';el.classList.add('new-speaker');
+  const rows=[0,338,656,1024],row=Math.floor(r.portraitIndex/6),top=rows[row],height=rows[row+1]-top;el.style.backgroundImage="url('reaction-cast-v3.png')";el.style.backgroundSize=`600% ${1024/height*100}%`;el.style.backgroundPosition=`${r.portraitIndex%6*20}% ${top/(1024-height)*100}%`;el.style.aspectRatio=`256/${height}`;el.classList.add('new-speaker');
  }
 }
 let reactionWaiting=false;

@@ -1,12 +1,14 @@
 # Anime World Generator
 
-**Version 1.7** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
+**Version 1.8** — Spin your way into an anime universe, build a character, and let the meme reactions judge your luck.
 
-Version 1.7 adds 216 new host lines, 44 power/topic opinion banks, individual enemy comments, and occasional two-character conversations with both portraits visible. Victory/defeat exchanges, topic-matched expertise, conversation cooldowns, and saved repeat avoidance keep the reactions varied. See [DIALOGUE-NOTES.md](DIALOGUE-NOTES.md), run `node test-dialogue-expansion.cjs`, or open `http://127.0.0.1:4189/qa-reactions.html` with the preview server running to compare solo opinions and paired reactions.
+Version 1.8 redraws all 18 new reaction hosts to match the original Natsu, Lucy, Goku and Vegeta portraits: expressive chibi proportions, bold outlines, cel shading and consistent framing.
+
+Version 1.7 added 216 new host lines, 44 power/topic opinion banks, individual enemy comments, and occasional two-character conversations with both portraits visible. Victory/defeat exchanges, topic-matched expertise, conversation cooldowns, and saved repeat avoidance keep the reactions varied. See [DIALOGUE-NOTES.md](DIALOGUE-NOTES.md), run `node test-dialogue-expansion.cjs`, or open `http://127.0.0.1:4189/qa-reactions.html` with the preview server running to compare solo opinions and paired reactions.
 
 The character variety update adds two reaction hosts per anime, more original dialogue, and reactions from the actual enemy beginning with their selection roll. Rerolling an opponent replaces that enemy's reveal; after Continue, only the accepted enemy joins the remaining battle reactions. New hosts are Nobara/Nanami, Sakura/Kakashi, Nami/Sanji, Renji/Urahara, Piccolo/Bulma, Gray/Erza, Todoroki/Uraraka, Levi/Armin, and Kurapika/Leorio. The player now uses one cohesive full-body illustration, with the head, neck, outfit and limbs drawn together. Each anime has two male and two female variants with three victory and three defeat poses. Existing saves resolve a stable variant on reopening.
 
-Run `node test-variety.cjs` for dialogue checks and `node test-cohesive.cjs` for all 36 whole-body identities and 216 pose frames. Open `http://127.0.0.1:4189/qa-variety.html` with the preview server running to inspect all male/female pose variants and the new reaction cast. The character models have no player aura oval and use masks for every pose to exclude detached fragments or neighboring sprites. Full release notes are in [RELEASE-1.7.md](RELEASE-1.7.md). Asset prompts and layout details are in [ART-VARIETY.md](ART-VARIETY.md) and [ART-COHESIVE.md](ART-COHESIVE.md).
+Run `node test-variety.cjs` for dialogue checks and `node test-cohesive.cjs` for all 36 whole-body identities and 216 pose frames. Open `http://127.0.0.1:4189/qa-variety.html` with the preview server running to inspect all male/female pose variants and the new reaction cast. The character models have no player aura oval and use masks for every pose to exclude detached fragments or neighboring sprites. Full release notes are in [RELEASE-1.8.md](RELEASE-1.8.md). Asset prompts and layout details are in [ART-VARIETY.md](ART-VARIETY.md) and [ART-COHESIVE.md](ART-COHESIVE.md).
 
 ![Anime World Generator gameplay](updated-gui.png)
 
@@ -58,7 +60,7 @@ No account, installation, build step, or internet connection is required after d
 3. Double-click **index.html** to open the game in a modern browser.
 4. Keep the HTML, CSS, JavaScript, and image files together.
 
-Version **1.7** appears in the app footer and browser title.
+Version **1.8** appears in the app footer and browser title.
 
 ## How to play
 
@@ -74,12 +76,12 @@ Starting a new run replaces the unfinished run. Completed characters remain in y
 
 ## Windows executable
 
-The game can also be packaged as **Anime World Generator 1.7.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
+The game can also be packaged as **Anime World Generator 1.8.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
 
 - Recommended: Windows 10 or 11 and a modern default browser.
 - Uses the .NET Framework supplied with modern Windows.
 - Includes all game assets and artwork; no installer is needed.
-- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.7`.
+- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.8`.
 - This personal release is unsigned, so Windows may show a publisher or reputation warning.
 
 Generated executables and ZIPs are kept in the local `dist/` folder, which is not tracked in Git. Downloading the source repository does not include a prebuilt executable. See the build instructions below.
@@ -136,13 +138,13 @@ The script uses the Windows .NET Framework C# compiler, embeds the game files, v
 
 ```text
 dist/
-  Anime World Generator 1.7.exe
-  Anime-World-Generator-1.7-Windows.zip
+  Anime World Generator 1.8.exe
+  Anime-World-Generator-1.8-Windows.zip
   READ ME.txt
   SHA256.txt
 ```
 
-The script also creates `Anime-World-Generator-1.7-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
+The script also creates `Anime-World-Generator-1.8-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
 
 ## Project layout
 

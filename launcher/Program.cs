@@ -7,16 +7,16 @@ using System.Security.Cryptography;
 using System.Windows.Forms;
 
 [assembly: AssemblyTitle("Anime World Generator")]
-[assembly: AssemblyDescription("Anime World Generator 1.8 — offline anime wheel game")]
+[assembly: AssemblyDescription("Anime World Generator 1.9 — offline anime wheel game")]
 [assembly: AssemblyCompany("Anime World Generator")]
 [assembly: AssemblyProduct("Anime World Generator")]
-[assembly: AssemblyVersion("1.8.0.0")]
-[assembly: AssemblyFileVersion("1.8.0.0")]
-[assembly: AssemblyInformationalVersion("1.8")]
+[assembly: AssemblyVersion("1.9.0.0")]
+[assembly: AssemblyFileVersion("1.9.0.0")]
+[assembly: AssemblyInformationalVersion("1.9")]
 
 internal static class Program
 {
-    private const string Version = "1.8";
+    private const string Version = "1.9";
     private const string Prefix = "AWG.assets.";
 
     [STAThread]
@@ -62,7 +62,7 @@ internal static class Program
                     throw new IOException("Could not verify " + name);
             }
             string index = Path.Combine(directory, "index.html");
-            if (!File.ReadAllText(index).Contains("Version 1.8"))
+            if (!File.ReadAllText(index).Contains("Version 1.9"))
                 throw new InvalidDataException("The application version does not match the launcher.");
             if (verifyOnly) return 0;
             Process.Start(new ProcessStartInfo(index) { UseShellExecute = true });

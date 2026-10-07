@@ -1,3 +1,11 @@
+# Release 1.9
+
+- Added Artwork credits to Settings.
+- Disclosed AI-assisted artwork and that the game is a free, unofficial fan project made for fun.
+- Credited featured characters and franchises to their respective rights holders and stated that the project is not affiliated with or endorsed by them.
+- Updated app version, launcher and offline packages to 1.9.
+- See RELEASE-1.9.md for downloads and validation.
+
 # Release 1.8
 
 - Redrew all 18 new reaction hosts to match the original Natsu, Lucy, Goku and Vegeta artwork.

@@ -1,3 +1,13 @@
+# Release 1.6
+
+- Replaced assembled player parts with cohesive full-body character models: 36 stable identities and 216 poses across nine anime.
+- Added two reaction hosts per anime and expanded original contextual dialogue.
+- All 93 enemies can react only once selected; rerolls replace the revealed opponent.
+- Removed the ghost-like player aura oval and isolated each pose with a native silhouette mask to exclude detached pixels and neighboring artwork.
+- Preserved character saves, gems, bonus rerolls, auto-spin and battle rules.
+- Updated version labels, Windows launcher, offline packages and SHA-256 verification.
+- See RELEASE-1.6.md for downloads, validation and artwork details.
+
 # Release 1.5
 
 - Earn one gem per newly completed victory, with duplicate-reward protection.

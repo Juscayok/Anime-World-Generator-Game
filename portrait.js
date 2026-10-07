@@ -31,12 +31,12 @@ function render(target,run,preview=true,options={}){
  const p=describe(run,preview),m=model(run,options.pose||0,preview);
  target.replaceChildren();target.className='portrait-art cohesive '+p.gender+' skin-'+p.skin+(p.transformed?' transformed':'');
  target.setAttribute('role','img');target.setAttribute('aria-label',`Complete ${p.gender} character, ${run.world} outfit, ${['standing','celebrating','confident','kneeling','seated','resting on one knee'][m.column]}. Build: ${p.origin}, age ${p.age}, ${p.faction}.`);
- target.style.background=`radial-gradient(ellipse at 50% 70%,${p.color}66,#0c1427 75%)`;
- const aura=document.createElement('span');aura.className='portrait-aura '+p.element;aura.style.color=p.color;aura.style.opacity=p.intensity?String(.18+p.intensity*.1):'0';target.append(aura);
+ target.style.background='#0c1427';
  if(m.rect){
   const [x,y,w,h]=m.rect,body=document.createElement('span');body.className='character-fullbody';
   body.style.backgroundImage="url('"+m.sheet+"')";body.style.backgroundSize=(m.atlas.width/w*100)+'% '+(m.atlas.height/h*100)+'%';
   body.style.backgroundPosition=(x/(m.atlas.width-w)*100)+'% '+(y/(m.atlas.height-h)*100)+'%';body.style.aspectRatio=w+'/'+h;
+  body.style.maskImage=m.atlas.masks[m.tile];body.style.webkitMaskImage=m.atlas.masks[m.tile];body.style.maskSize='100% 100%';body.style.webkitMaskSize='100% 100%';body.style.maskRepeat='no-repeat';body.style.webkitMaskRepeat='no-repeat';
   body.setAttribute('data-model',run.world+':'+m.row);body.setAttribute('data-pose',String(m.column));target.append(body);
  }else{const missing=document.createElement('span');missing.className='art-missing';missing.textContent='Character artwork unavailable';target.append(missing);}
  if(p.transformed){const form=document.createElement('span');form.className='portrait-form';form.textContent=p.transformed;target.append(form);}

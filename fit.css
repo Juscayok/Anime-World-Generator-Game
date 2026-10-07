@@ -125,7 +125,7 @@ body{grid-template-columns:minmax(0,1fr)}header,main,footer{min-width:0}
 .battle-player.cohesive.kneeling{left:10%;bottom:9%;filter:brightness(.8) saturate(.8) drop-shadow(0 6px 6px #0008)}
 .battle-player.cohesive .portrait-art{background:transparent!important;overflow:visible;border-radius:0}
 .battle-player.cohesive .character-fullbody{height:100%;bottom:0}
-.battle-player.cohesive .portrait-aura{opacity:.2!important}
+.portrait-art.cohesive .portrait-aura{display:none!important}
 .battle-player.cohesive .portrait-form{display:none}
 @media(max-width:600px){.battle-player.cohesive,.battle-player.cohesive.standing,.battle-player.cohesive.kneeling{left:1%;width:47cqw;bottom:9%}}
 /* Stable per-character appearance details; hair tint does not recolor skin. */

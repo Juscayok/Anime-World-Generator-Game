@@ -2,9 +2,9 @@
 
 Generated using the built-in imagegen tool. Each atlas contains four original character identities (two male and two female) with six poses per identity. The nine final workspace assets are `character-models-jjk.png`, `character-models-naruto.png`, `character-models-onepiece.png`, `character-models-bleach.png`, `character-models-dragonball.png`, `character-models-fairytail.png`, `character-models-mha.png`, `character-models-aot.png`, `character-models-hxh.png`.
 
-The renderer displays one complete figure, preserving the measured width/height ratio. It uses no separate head, hair, torso, clothing, hands or legs. `character-art.js` holds alpha-component bounds; `measure-character-art.cjs` reads the original PNG pixels without modifying them and regenerates that manifest. `node test-cohesive.cjs` checks all 36 identities and 216 pose frames, same-identity selection across poses, saves, enemy isolation and desktop/mobile rendering.
+The renderer displays one complete figure, preserving the measured width/height ratio. It uses no separate head, hair, torso, clothing, hands or legs. `character-art.js` holds alpha-component bounds; `measure-character-art.cjs` reads the original PNG pixels without modifying them and regenerates that manifest. `node test-cohesive.cjs` checks all 36 identities and 216 isolated pose frames, same-identity selection across poses, saves, enemy isolation and desktop/mobile rendering.
 
-The illustration represents the anime world and a coherent appearance variant. The exact age, anatomy, weapons and abilities listed on the character sheet are not all drawn literally. Power auras and origin tints remain separate effects. Old saves keep their data and resolve a stable whole-body appearance from their existing ID, gender and age.
+The illustration represents the anime world and a coherent appearance variant. The exact age, anatomy, weapons and abilities listed on the character sheet are not all drawn literally. Version 1.6 removes the aura oval. Origin tints remain; native vector silhouette masks isolate every pose without editing its source PNG. Old saves keep their data and resolve a stable whole-body appearance from their existing ID, gender and age.
 
 ## Prompts
 

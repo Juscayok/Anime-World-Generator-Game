@@ -15,6 +15,9 @@ function render(target,run){
  if(!d){const empty=document.createElement('p');empty.textContent='Complete the final battle to reveal this scene.';target.append(empty);return null;}
  const field={'City ruins':'city','Open plains':'plains','Dense forest':'forest','Underground arena':'arena','Mountain summit':'mountain'}[d.field]||'plains';
  target.className='battle-scene '+field+(d.won?' player-won':' player-lost');target.setAttribute('role','img');target.setAttribute('aria-label',(d.won?'Your character stands victorious over defeated ':'Your character rests defeated beneath ')+d.enemy+'. '+d.field+'. Opponent condition: '+d.condition+'.');
+ const backdrop=document.createElement('span');backdrop.className='battle-backdrop';
+ const tiles={city:[0,0],plains:[1,0],forest:[0,1],arena:[1,1],mountain:[0,2]},[col,row]=tiles[field];
+ backdrop.style.backgroundImage="url('battle-backgrounds-v2.png')";backdrop.style.backgroundPosition=(col*100)+'% '+(row*50)+'%';backdrop.setAttribute('aria-hidden','true');target.append(backdrop);
  const ground=document.createElement('span');ground.className='battle-ground';target.append(ground);
  const p=root.AWGPortrait.describe(run,false),pose=(d.won?0:3)+p.seed%3;
  const m=root.AWGPortrait.model(run,pose),player=document.createElement('div');player.className='battle-player cohesive '+(d.won?'standing':'kneeling');

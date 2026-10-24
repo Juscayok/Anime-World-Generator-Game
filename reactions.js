@@ -248,6 +248,10 @@ function expandReaction(state,s,r,result,pair,rng){
   const expert=experts.includes(result.speaker)?result.speaker:experts[turn%experts.length];
   if(expert){const art=hostArt(expert,pair,mood);result.speaker=expert;delete result.portraitIndex;Object.assign(result,{artFrame:art.frame,...(art.portraitIndex===undefined?{}:{portraitIndex:art.portraitIndex})});result.text=(s.label||s.name||s.id)+': '+r.label+'.\n'+pick(state,'opinion:'+topic.world+':'+topic.key+':'+expert,topic.lines[expert],rng);result.knowledge=topic.key;}
  }
+ if(!result.enemySpeaker){
+  const candidates=expansion.contextualCandidates(state,s,r,result.speaker,mood);
+  if(candidates)result.text=pick(state,'specific:'+result.speaker+':'+s.id+':'+r.label,candidates,rng);
+ }
  // Leave space between exchanges, keep cameos distinct, and retain solo reactions.
  if(turn<2||turn-(state.lastConversation??-100)<3||rng()>=.28)return result;
  let lines,key;
@@ -265,6 +269,12 @@ function expandReaction(state,s,r,result,pair,rng){
   }
  }else if(s.id==='win'){key=r.label==='VICTORY'?'win':'loss';lines=pick(state,'outcome-exchange:'+state.world+':'+key,expansion.outcomes[state.world][key],rng);}
  else{lines=pick(state,'exchange:'+state.world+':general',expansion.exchanges[state.world],rng);key='general';}
+ lines=lines.map(([name,line])=>{
+  if(result.enemySpeaker&&name===result.speaker)return [name,line];
+  const candidates=expansion.contextualCandidates(state,s,r,name,mood);
+  const specific=candidates?pick(state,'specific-duo:'+name+':'+s.id+':'+r.label,candidates,rng):line;
+  return [name,result.enemySpeaker&&s.id==='enemyLevel'?'That condition '+(mood==='bad'?'helps our opponent. ':mood==='good'?'gives us an opening. ':'sets the baseline. ')+specific:specific];
+ });
  const participants=[...new Set(lines.map(line=>line[0]))];if(participants.length!==2)return result;
  const primary=participants[0];if(!result.enemySpeaker){const art=hostArt(primary,pair,mood);result.speaker=primary;delete result.portraitIndex;result.artFrame=art.frame;if(art.portraitIndex!==undefined)result.portraitIndex=art.portraitIndex;}
  result.partnerArt=hostArt(participants[1],pair,mood);result.speakers=participants;

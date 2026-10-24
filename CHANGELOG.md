@@ -1,3 +1,12 @@
+# Release 1.11
+
+- Added optional section simulation with a per-result dialogue review and automatic pause at the next section.
+- Added specific response material for every signature technique and distinct phrasing for all 36 hosts.
+- Replaced gradient battle scenery with five detailed painted environments.
+- Added 90 identity sprites for 14 species/identity transformations and nine Titan forms, shared by previews, battles and saved characters.
+- Updated the tutorial, world energy headings, offline packages and launcher to 1.11.
+- See RELEASE-1.11.md for artwork, previews and validation.
+
 # Release 1.10
 
 - Added four expressive portraits for each of the 18 newer reaction hosts: 72 portraits total.

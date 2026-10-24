@@ -130,5 +130,212 @@ function findTopic(state,s,r){
  const hits=topics.filter(t=>t.world===state.world).map(t=>({t,rank:Math.max(0,...t.terms.filter(term=>text.includes(' '+normalize(term)+' ')).map(term=>normalize(term).length))})).filter(x=>x.rank>0);
  return hits.sort((a,b)=>b.rank-a.rank)[0]?.t;
 }
-root.AWGDialogueExpansion={voices,topics,exchanges,outcomes,findTopic,enemyVoices,nonverbal};if(typeof module!=='undefined')module.exports=root.AWGDialogueExpansion;
+// Original fan dialogue: the selected option supplies the subject and consequence;
+// the speaker supplies the phrasing. No randomly appended catchphrases.
+const responseVoices={
+Yuji:['{value}? Okay! {detail}','{detail} Come on, I’ll practice with you.','Wait, {value}? {detail}','{detail} Let’s make sure everyone gets home.'],
+Gojo:['Oh, {value}? Now you have my attention. {detail}','{detail} Your incredibly talented teacher can arrange a demonstration.','{value}, huh? {detail} Try keeping up.','{detail} Don’t look so worried. That’s what practice is for.'],
+Nobara:['{value}? You’d better make it look good. {detail}','{detail} And no, confidence doesn’t count as practice.','So, {value}. {detail} I’m watching.','{detail} I refuse to carry someone who won’t learn.'],
+Nanami:['{value}. {detail} Account for that before accepting a mission.','{detail} I would prefer to establish this during working hours.','Regarding {value}: {detail}','{detail} We need a repeatable result, not a fortunate accident.'],
+Naruto:['{value}! {detail} We’re training together tomorrow!','{detail} I know what it’s like to start behind everyone else.','You got {value}? {detail} Show me!','{detail} Don’t quit just because the first try is rough.'],
+Sasuke:['{value}. {detail} Don’t advertise your next move.','{detail} Show me that you understand it.','With {value}, {detailLower}','{detail} An enemy won’t wait for you to figure it out.'],
+Sakura:['{value}? {detail} Let me check your condition first.','{detail} I’m not patching you up for ignoring the same warning twice.','About {value}: {detail}','{detail} We’ll work on it in controlled bursts.'],
+Kakashi:['Hmm, {value}. {detail} Sounds like tomorrow’s lesson is settled.','{detail} You did think about what happens afterward, right?','{value}? {detail} I might even put my book down.','{detail} Now try it while someone covers your blind spot.'],
+Luffy:['{value}?! That’s awesome! {detail} Show me again!','{detail} Hey, could we try that on our next adventure?','You’re really going with {value}? {detail}','{detail} Just don’t hit my friends!'],
+Zoro:['{value}, huh. {detail} Try it against a moving target.','{detail} You can talk about it after training.','If you’re relying on {value}, {detailLower}','{detail} Again. You’re still hesitating.'],
+Nami:['{value}? {detail} I want the repair costs settled first.','{detail} We’re keeping an escape route this time.','Let me get this straight: {value}. {detail}','{detail} Do it away from the ship, please.'],
+Sanji:['{value}? {detail} We’ll need a proper meal before testing it.','{detail} Leave enough strength to protect the crew.','With {value}, {detailLower} I can cover the front.','{detail} We can discuss the next attempt over dinner.'],
+Ichigo:['{value}? {detail} I’ll cover you while you try it.','{detail} Just tell me before someone gets caught in it.','So that’s your {value}. {detail}','{detail} We have people to get back to.'],
+Rukia:['{value}. {detail} I can sketch the formation for you.','{detail} Pay attention; this is the part that gets people hurt.','You chose {value}? {detail}','{detail} Footwork first. The dramatic entrance can wait.'],
+Renji:['{value}! {detail} Let’s see it in a spar.','{detail} Don’t stop after the first swing!','So you’ve got {value}. {detail}','{detail} We’re running that drill again.'],
+Urahara:['Oh my, {value}. {detail} I have just the test for that.','{detail} Shall we find out in a suitably reinforced room?','How interesting. {value}! {detail}','{detail} A small experiment now could prevent a very expensive surprise.'],
+Goku:['{value}! {detail} Can we spar and try it out?','{detail} I bet we can come up with a fun training exercise!','Wow, {value}? {detail}','{detail} Let’s start small, then see how far you can go!'],
+Vegeta:['{value}? {detail} Potential is no excuse to slack off.','{detail} Show me results worthy of your confidence.','You intend to rely on {value}. {detail}','{detail} Now do it again without wasting half your energy.'],
+Piccolo:['{value}. {detail} Concentrate.','{detail} Keep your guard up when you finish.','With {value}, {detailLower} We’ll train at dawn.','{detail} Again, this time without losing focus.'],
+Bulma:['{value}? {detail} I’m getting my instruments.','{detail} Nobody fires anything until I finish taking readings.','Hold on—{value}? {detail}','{detail} Give me numbers before you give me another crater.'],
+Natsu:['{value}! {detail} Come on, let’s try it!','{detail} I’m getting fired up just thinking about it!','You got {value}? {detail} I want the first spar!','{detail} We’ll figure it out together before the next job!'],
+Lucy:['{value}? {detail} Let’s agree on a plan first.','{detail} I’d like to finish one job without paying for a building.','So, {value}. {detail} I’m writing that down.','{detail} I’ll ask my spirits how we can help.'],
+Gray:['{value}, huh? {detail} Try thinking a move ahead.','{detail} Even Natsu should be able to follow that plan.','If you’re using {value}, {detailLower}','{detail} We’ll test it before someone wrecks the guild.'],
+Erza:['{value}. {detail} We begin training immediately.','{detail} Your guildmates need to be able to trust you.','With {value}, {detailLower} Prepare accordingly.','{detail} Repeat the drill until you can do it under pressure.'],
+Deku:['{value}? Wait, {detailLower} I need to write this down!','{detail} Could we measure it during a rescue drill too?','With {value}… {detail} That changes the approach!','{detail} Let’s test the limits before trying maximum output.'],
+Bakugo:['{value}? {detail} Quit staring and use your head!','{detail} I’m not waiting while you make the same mistake twice.','So you’ve got {value}. {detail} Prove you can handle it!','{detail} Again! Don’t waste the opening!'],
+Todoroki:['{value}. {detail} We should test that transition.','{detail} I can help keep the other side covered.','If you use {value}, {detailLower}','{detail} Let’s establish the limit before increasing the output.'],
+Uraraka:['{value}? {detail} Could that help with a rescue?','{detail} Let’s make sure everyone has a safe landing.','Oh, {value}! {detail} I’ll help you practice.','{detail} We can start with something small and work up.'],
+Eren:['{value}. {detail} We have to make the opening count.','{detail} I’m not letting all that training go to waste.','If that’s your {value}, {detailLower}','{detail} Tell the squad before we move.'],
+Mikasa:['{value}. {detail} I’ll watch your flank.','{detail} Check your equipment before we leave.','With {value}, {detailLower} Stay close.','{detail} Getting everyone back comes first.'],
+Levi:['{value}. {detail} Don’t make me repeat that.','{detail} Sloppy preparation gets people killed.','You’re relying on {value}? {detail}','{detail} Fix it before we leave. And clean your gear.'],
+Armin:['{value}? {detail} That could change which route we take.','{detail} We need a second plan if the first opening closes.','Let’s think through {value}. {detail}','{detail} Tell me what you expect the enemy to do next.'],
+Gon:['{value}! {detail} Can you show me how it works?','{detail} I want to try practicing with you!','You really got {value}? {detail}','{detail} Let’s ask Killua to help us test it!'],
+Killua:['{value}, huh. {detail} Don’t show your whole hand.','{detail} Gon would’ve rushed straight into the test already.','If you’re relying on {value}, {detailLower}','{detail} I’ll watch for the trick you missed.'],
+Kurapika:['{value}. {detail} Establish the conditions precisely.','{detail} An assumption is a poor substitute for evidence.','Regarding {value}, {detailLower}','{detail} Understand the cost before committing.'],
+Leorio:['{value}? {detail} And we’re including recovery in the plan!','{detail} I’m checking you over before the next attempt.','Hold on, {value}? {detail}','{detail} Surviving the trip home is part of succeeding!']
+};
+const optionDetails={
+Majin:['Your elastic body opens up attacks a human body can’t manage.','Pink skin and a head tentacle are going to make disguises interesting.','Regeneration still won’t teach you how to dodge.'],
+Exceed:['Those wings give you another route, but you still need somewhere safe to land.','A small feline body can slip through places a human can’t.','Your tail and wings will need room when you turn in the air.'],
+Namekian:['Your antennae and green skin make your ancestry unmistakable.','A Namekian body changes your reach, but you still need to watch your guard.'],
+'Frost demon':["A body like Frieza’s gives you a long tail to work into close combat.","You share Frieza’s ancestry; choose for yourself what you’ll do with that power."],
+'Fish-man':['Gills and fins give you a different set of options once the fight reaches water.','Choose whether this fight should stay on dry land.'],Mink:['Electro and animal senses could make a close approach dangerous.','Those ears may catch movement before you can see it.'],Lunarian:['Your black wings and back flame make hiding difficult.','Flight changes the approach, but it also makes you easier to spot.'],Giant:['Your reach is useful, but a narrow street will work against you.','Plan your footing before stepping into a crowded fight.'],
+'Cursed spirit':['A spirit body changes how you approach a fight with sorcerers.','Your monstrous appearance is going to draw attention before you attack.'],Arrancar:['The mask fragment and Hollow hole make your origin hard to hide.','Control your spiritual pressure before announcing yourself to every enemy nearby.'],Visored:['A Hollow mask is another source of power you’ll need to keep under control.','Practice putting the mask away as carefully as calling it out.'],'Chimera Ant':['Your insect limbs and tail change the angles you can attack from.','Those senses won’t help if you ignore what they tell you.'],
+Limitless:['Managing the distance around you demands fine cursed-energy control.','Don’t assume an impressive defense means you can ignore the cost.'],'Ten Shadows':['Your summons need room to work together instead of blocking each other.','Decide which shikigami creates the opening and which follows it.'],'Cursed Speech':['Choose your words before you put power behind them.','A stronger command could leave your throat paying for it.'],'Blood Manipulation':['Manage your blood supply instead of spending it all on the opening attack.','A piercing shot and a close-range exchange need different preparation.'],'Boogie Woogie':['A swap can put your partner in danger if they don’t know the signal.','Keep track of where everyone will land after the swap.'],'Ratio Technique':['Find the dividing point before committing your strike.','A precise hit will do more for you than another wild swing.'],'Straw Doll Technique':['A link to the target matters more than throwing nails everywhere.','Keep a nail ready for the opening your hammer creates.'],
+Kamehameha:['A bigger beam is useless if the target moves before you finish charging.','Work on changing the angle before increasing the blast.'],'Instant Transmission':['Find the ki signature before you try to jump to it.','Appearing behind someone won’t help if they sense you arriving.'],'Special Beam Cannon':['That piercing shot needs an opening long enough to charge.','Have someone cover you while you prepare the beam.'],'Spirit Bomb':['You’ll need time and protection to gather energy.','Make sure your allies understand why you can’t move yet.'],'Galick Gun':['Keep the beam focused instead of throwing all your ki into it.','Pick the firing line before charging the blast.'],'Final Flash':['Make the opponent commit before you release that much energy.','Leave yourself enough ki to survive if the beam misses.'],
+'Fire Dragon Roar':['A broad roar could catch your guildmates along with the enemy.','Choose the firing lane before filling it with dragon fire.'],'Celestial Gate':['A spirit is a partner, so agree on what you need before opening the gate.','Keep track of how long you can support the summon.'],'Ice-Make Lance':['A clear shape and a stable grip matter before you launch the ice.','A brittle lance won’t survive contact just because it looks impressive.'],'Requip Armor':['Choose the armor for the attack you expect, then practice the switch.','A badly timed equipment change leaves you exposed.'],'Sky Dragon Healing':['Keep the healer protected while the magic does its work.','Restoring someone else won’t help if you collapse beside them.'],
+Rasengan:['Keep the rotation stable as you close the distance.','Landing the sphere matters more than making it larger.'],Chidori:['That straight rush needs a clear view of the enemy’s counter.','Commit only when you can read what waits at the end of the charge.'],'Shadow Clone':['Splitting your chakra too many ways can leave every clone short.','Use a clone to learn something before sending in the next one.'],'Flying Raijin':['Place the mark where you’ll want to arrive, not merely where you can reach.','An escape mark is worth preparing before the attack.'],
+'Gum-Gum':['Stretching your reach also gives the enemy a longer limb to target.','Practice recovering your balance after the recoil.'],'Op-Op':['Plan what changes inside your operating space before creating it.','Watch your stamina while controlling the room.'],'Flame-Flame':['Leave a path for the crew before spreading fire across the field.','Control the heat near your allies before widening the attack.'],
+'Getsuga Tensho':['Keep your sword line steady as you release the pressure.','Save enough spiritual energy for the exchange after the slash.'],Cero:['A charging blast makes your firing line obvious.','Force an opening before gathering that much spiritual pressure.'],'Petal Storm':['Fine control matters when the blades surround both friends and enemies.','Watch every angle instead of staring at the first wave.'],
+'One For All':['Your body has to withstand the force you put through it.','A controlled burst beats breaking your own limbs on the first strike.'],Explosion:['Recoil can help your movement if you plan where it sends you.','Check what lies behind the target before widening the blast.'],'Zero Gravity':['A floating target still needs a safe landing.','Keep track of what happens when the effect ends.'],'Half-Cold Half-Hot':['Balance your temperature before pushing either side harder.','An ice wall needs a route through it for your team.'],
+Jajanken:['Charging openly invites a counter before the punch is ready.','Make the opponent hesitate long enough for the charge.'],Godspeed:['Watch the duration instead of assuming that speed will last forever.','Plan where you’ll be when the burst ends.'],'Bungee Gum':['An unseen attachment can matter more than the obvious strike.','Watch what you touch and where the tension will pull you.'],'Chain Jail':['Understand the target restriction before relying on the chain.','A condition that strong deserves more thought than a practice throw.']
+};
+Object.assign(optionDetails,{
+'Projection Sorcery':['Plan the movement sequence before you commit to it.','A broken movement rule can leave you frozen at the worst moment.'],
+Construction:['Making an object costs energy before you even use it.','Start with a small, useful shape rather than the biggest weapon you can imagine.'],
+'Disaster Flames':['Leave an exit before the heat fills the space.','A wall of flame can cut off your allies too.'],
+'Ice Formation':['Freeze the route the enemy needs instead of chasing every movement.','Leave your teammates somewhere they can put their feet.'],
+'Star Rage':['Adding force to a strike won’t correct a missed punch.','Check what your reinforced hit will collide with after contact.'],
+Copy:['Learn the conditions of the copied technique before trying to combine it with another.','Having the technique isn’t the same as understanding its timing.'],
+'Idle Transfiguration':['Soul-changing contact makes the approach as important as the touch.','Decide how to keep the target from controlling the distance.'],
+Comedian:['If the effect depends on what you find funny, rehearsing a fixed plan may not be enough.','Your sense of humor is part of the condition; don’t pretend it is a normal punch.'],
+'Private Pure Love Train':['Learn the domain rules before counting on a jackpot.','Plan how you survive while waiting for the favorable outcome.'],
+'Fireball Jutsu':['Watch the wind before releasing a fireball near your squad.','A broad flame can force movement even when it doesn’t land.'],
+'Sand Manipulation':['Keep enough sand near you to cover a sudden counter.','Controlling several angles matters more than making one huge wave.'],
+'Puppet Technique':['Protect the chakra threads and the person controlling them.','A puppet can draw attention while you change position.'],
+'Shadow Possession':['Check where the light puts your shadow before you commit.','A change in the lighting can change the reach you thought you had.'],
+'Water Dragon':['Make sure you can supply the water and chakra the technique needs.','A large water attack needs a clear route past your allies.'],
+'Eight Trigrams':['Closing into palm-strike range gives the opponent a chance to counter.','Keep your footwork precise through the full sequence.'],
+'Wood Release':['A growing barrier can control a route without chasing the enemy.','Leave your squad an opening before filling the area with branches.'],
+'Lightning Armor':['Keep the chakra flow stable while you accelerate.','Don’t let a faster approach outrun your ability to turn.'],
+'Summoning Jutsu':['Agree on the summon’s role instead of calling it into a confused formation.','Keep enough chakra to fight after the summon arrives.'],
+'Mind Transfer':['Your body needs protection while your mind is elsewhere.','Choose a target you can actually hit with the transfer.'],
+'Flying Slash':['The edge still needs a clear line after it leaves your sword.','A ranged cut gives you room, but the enemy can use that room too.'],
+'Fish-man Karate':['Think about how the water around you changes the strike.','Set your stance before sending force through the target.'],
+Rokushiki:['Practice changing between movement and attack without a pause.','A fast approach won’t save a poorly timed strike.'],
+Electro:['Make sure your own crew is clear before discharging through a crowded fight.','Use the shock to create a follow-up instead of admiring the sparks.'],
+'Dragon Claw':['Your grip needs a stable position before you try crushing the defense.','Get your fingers into position without offering an easy wrist counter.'],
+'Flame Kick':['Watch where the arc of your kick carries the flame.','Your landing needs as much practice as the burning strike.'],
+'Impact Strike':['Close the distance without winding up so early that the enemy reads it.','Keep your balance if the heavy hit meets empty air.'],
+'Sonic Shot':['Line up the shot before the target changes direction.','A loud ranged attack can reveal your position immediately.'],
+'Giant Spear':['Your reach needs enough space to bring the weapon back around.','Watch the opening beside the shaft when someone gets inside your range.'],
+'Counter Stance':['A counter needs the right attack to answer; don’t bite on the first feint.','Stay ready to leave the stance if the enemy refuses your invitation.'],
+'Pressure Cannon':['Pick the firing lane before compressing the attack.','Leave yourself a defense if the target moves off that line.'],
+'Whirlwind Cut':['A sweeping cut needs room clear of your own crew.','Finish the turn with your guard facing the next threat.'],
+'Kido Barrage':['Sequence the spells so the first one creates room for the next.','Rapid casting can drain the reserves you need for defense.'],
+'Spirit Arrow':['A steady release matters more than drawing a larger arrow.','Practice leading a moving target rather than aiming where it was.'],
+'Flash Step Strike':['Know where your feet will land before accelerating.','A fast arrival is wasted if your sword is late.'],
+'Soul Chain':['Keep control of the chain’s return as well as its first reach.','A binding line can obstruct your ally if you stretch it across their path.'],
+'Flame Slash':['Leave a safe path past the burning edge for your allies.','Heat can control space after the sword swing has ended.'],
+'Ice Prison':['Contain the escape route before closing the ice around the target.','Don’t trap a teammate inside the same barrier.'],
+'Shadow Bind':['Decide which movement you need to stop first.','Prepare the next attack before the binding gives way.'],
+'Lightning Spear':['A straight piercing attack needs a line you can keep clear.','Recover your guard if the thrust passes the target.'],
+'Spirit Shield':['Angle the shield to cover the person behind you too.','A shield held in one direction leaves the other side open.'],
+'Destructo Disc':['Keep everyone clear of the cutting disc’s path.','Aim where the opponent has to move instead of chasing them with the throw.'],
+'Solar Flare':['Warn your allies before filling their vision with light.','Decide whether the flash buys an escape or an attack before using it.'],
+'Death Beam':['A narrow beam rewards a steady aim rather than a larger blast.','A slight change in the target’s position can spoil a precise shot.'],
+'Tri-Beam':['Watch the strain on your body as well as the result of the blast.','One more shot isn’t free just because you can force it out.'],
+Masenko:['Keep your aim steady through the overhead charge.','Have an answer ready if someone rushes you before release.'],
+'Energy Barrier':['Know how much pressure you can hold before you shelter someone behind it.','Keep enough energy to move after dropping the barrier.'],
+'Lightning Dragon Fist':['Make the approach count before releasing the lightning through your fist.','Check who is standing beside your target before the discharge.'],
+'Solid Script':['Choose the word and its placement before you fill the space with it.','A useful effect matters more than making the lettering enormous.'],
+'Water Lock':['Keep control of the water while the trapped target struggles.','Don’t cut off your own approach by filling the whole space.'],
+'Take Over':['Learn what the borrowed form changes about your balance.','Returning to your own form should be part of the practice.'],
+'Iron Dragon Spear':['Line up the piercing strike before committing your weight.','Recover quickly if the target moves inside the spear’s reach.'],
+'Fairy Sphere':['Coordinate the protection with the people you intend to shelter.','Know what the barrier commits you to before invoking it.'],
+Hardening:['Protect the joints and angles that a hardened surface doesn’t cover.','Use the defense to make an opening rather than standing still for every hit.'],
+Electrification:['Track how much electricity you can release before losing control.','Your classmates need to know the discharge area before you start.'],
+Engine:['Allow room to slow down after the burst.','Check the route before accelerating past the point where you can turn.'],
+Creation:['Know the material you need before trying to make it under pressure.','Account for what producing the object takes from your body.'],
+'Dark Shadow':['Lighting can change how difficult your partner is to control.','Agree on the attack and recall signal before the room gets dark.'],
+Frog:['Your tongue and jumping reach give you rescue options beyond a direct attack.','Check the landing surface before committing to a long leap.'],
+Erasure:['Keep the target in view and plan for the moment you have to blink.','An obstacle across your sightline can break the plan.'],
+Steel:['Check your mobility after hardening the body.','A tougher surface still needs a stance that won’t topple.'],
+'Nape Strike':['Reach the nape with enough blade and gas left to get away.','Choose the exit angle before beginning the cut.'],
+'Hook Reversal':['Check the second anchor before releasing the first.','A sharp change of direction puts strain on both the gear and you.'],
+'Blade Feint':['Make the false strike believable without losing your actual opening.','Keep enough blade control to redirect after the enemy reacts.'],
+'Squad Flank':['Agree on the signal before splitting the squad.','A flank only works if both sides arrive while they can still support each other.'],
+'Rapid Ascent':['Choose the upper anchor before spending gas on the climb.','Make sure there is somewhere useful to go when you reach the height.'],
+'Smoke Diversion':['The smoke can hide your squad’s signal as well as your movement.','Decide which route you will take before obscuring it.'],
+'Thunder Spear Volley':['Keep the squad clear of the blast radius.','Time the volley so the target cannot turn into the next attacker.'],
+'Precision Shot':['Steady your position before trusting a narrow firing window.','Choose a firing line that doesn’t cross the squad’s route.'],
+'Anchor Pivot':['Your anchor has to withstand the force of the turn.','Look through the pivot instead of watching the cable behind you.'],
+'Rescue Grapple':['Account for the rescued person’s weight before the swing.','Choose a landing both of you can survive.'],
+'Evasive Roll':['Finish the roll where you can move again, not at the enemy’s feet.','Watch for rubble before dropping your weight.'],
+'Ambush Strike':['Prepare the withdrawal before leaving cover.','A missed first attack turns an ambush into a close fight.'],
+'Deep Purple':['Keep track of the smoke constructs you can actually maintain.','Use a decoy to learn where the enemy is looking.'],
+Hakoware:['Keep track of the aura debt instead of assuming the first contact settles it.','Your distance and timing matter while the debt grows.'],
+'Black Voice':['You need a way to land the antenna before relying on control.','Protect the controller after you secure the target.'],
+'Hide and Seek':['Know which exit you need before entering the hidden space.','An escape route is useful only if you can reach its entrance.'],
+'Emperor Time':['Account for the cost of maintaining the state.','Choose the moment you need the extra capability instead of keeping it active casually.'],
+'Skill Hunter':['Learn the acquisition and use conditions before counting on the stolen ability.','A collection of abilities still needs a combination you can execute.'],
+'Biscuit Training':['Set a sustainable practice schedule rather than exhausting yourself on day one.','Track recovery as carefully as the weight of the next exercise.'],
+'Dragon Dive':['Mark where your allies will be before the descending strikes cover the area.','A wide barrage needs a plan for what survives between the impacts.']
+});
+
+Object.assign(optionDetails,{
+ 'Dragon Slayer':['Dragon Slayer senses are useful until the noise and smells overwhelm you.','Choose a fighting space where your dragon magic won’t catch the whole guild.'],
+ 'Human mage':['A spell you can cast reliably is worth more than a spectacular one that leaves you helpless.','Figure out which part of your magic helps when brute force won’t.'],
+ 'Celestial Spirit mage':['Learn your spirits’ strengths and ask for their help as partners.','Opening another gate means another demand on your magic.'],
+ 'Take Over mage':['Practice returning from the borrowed form before testing its strongest attack.','The new body will need different footwork from your own.'],
+ Sorcerer:['Seeing the curse is only the beginning; know how you’re going to exorcise it.','Check for civilians before turning the place into a training ground.'],
+ 'Curse user':['Other sorcerers won’t assume you’re here to help.','Your technique won’t protect you from the consequences of how you use it.'],
+ 'Reincarnated sorcerer':['An old technique still has to work against opponents who know different tricks.','Learn what changed in this era before expecting it to follow the old rules.'],
+ 'The Honored One':['Being called the strongest will draw the people who want to test it.','Keep track of who needs your protection while everyone stares at your power.'],
+ Shinobi:['Learn the mission before choosing the jutsu.','Make sure your squad knows the signal when you move.'],
+ 'Rogue ninja':['An unfamiliar village may see the missing allegiance before it sees your intentions.','Keep a route out when you can’t count on village backup.'],
+ Samurai:['Your sword discipline needs to hold up against ranged ninjutsu too.','Close the distance without letting a hand sign distract you from the real threat.'],
+ Jinchuriki:['Work with the power inside you instead of assuming you can force it to cooperate.','The people beside you need to know when you’re losing control.'],
+ 'Reincarnated prodigy':['Inherited potential won’t tell you which choice is right for your squad.','Learn the basics before treating an old legacy as proof you can skip them.'],
+ Human:['You’ll have to make your training count when the other side has a natural advantage.','Find the part of the fight where your technique matters more than your body.'],
+ 'Soul Reaper':['Your sword and spiritual pressure need to work together.','Keep the living people in the area out of the exchange.'],
+ Quincy:['Practice the aim before drawing in more spiritual energy.','Keep room to move while lining up your shot.'],
+ Fullbringer:['Find out exactly what your focus lets you change.','Protect the object your ability depends on.'],
+ 'Hero student':['A classroom drill is the right place to discover a limitation.','Remember the rescue objective when everyone starts comparing attack power.'],
+ 'Pro hero':['People will look to you for an evacuation route as well as a victory.','Make the plan clear enough that another hero can follow it.'],
+ Vigilante:['You’ll need a way to help without leaving bystanders in the middle of the fight.','Plan who handles the injured once the threat is stopped.'],
+ Villain:['People are going to judge what you do with the power, not just how much you have.','Expect heroes to interfere when you put civilians at risk.'],
+ 'Support specialist':['Ask what the user needs before building a stronger piece of equipment.','A repairable tool beats one that fails the moment the conditions change.'],
+ 'Scout recruit':['Check both anchors before trusting your first swing beyond the walls.','Learn the withdrawal signal before the squad leaves the gate.'],
+ 'Garrison soldier':['Know which breach you hold and where the civilians go behind you.','Check the supply route before counting on another round of ammunition.'],
+ 'Military Police recruit':['A crowded street needs more care than an empty training yard.','Know who you’re protecting before taking a position.'],
+ 'Warrior candidate':['Learn what the unit expects before volunteering for the dangerous part.','Your training needs a plan for returning alive too.'],
+ 'Civilian survivor':['Find the shelter and a way to signal for help before the fighting reaches you.','Knowing the streets can matter as much as carrying a weapon.'],
+ 'Hunter applicant':['The exam can test your judgment long before a straight fight.','Don’t let another applicant choose which risks you take.'],
+ 'Licensed Hunter':['A license opens doors; it won’t tell you which one is a trap.','Prepare for the return trip before taking the assignment.'],
+ 'Assassin trainee':['Learn to leave an approach before the target notices it.','A quiet retreat deserves as much practice as the first strike.'],
+ 'Martial artist':['Practice your stance when you’re tired, not just when you’re fresh.','Keep an answer ready for an opponent who refuses close range.'],
+ 'Uchiha':['Your eyes can read an opening only if you pay attention to it.','Don’t let the clan name decide which fights you pick.'],
+ 'Hyuga':['Precise strikes still need the footwork to get you into range.','Watch the whole approach instead of chasing the first chakra point you see.'],
+ 'Uzumaki':['Strong reserves are useful only if you learn how to spend them.','A long fight still needs a plan beyond outlasting the other person.'],
+ 'Senju':['Your clan’s reputation won’t choose the right technique for this mission.','Turn the stamina you have into consistent training.'],
+ 'Nara':['A clever trap needs the light and terrain to cooperate.','Make sure your teammate understands the plan before you spring it.'],
+ 'Akimichi':['Know how much energy the enlarged form will need.','Keep space for your allies when you change size.'],
+ 'Yamanaka':['Have someone watch your body before attempting a mind technique.','Agree on how you’ll communicate before the squad splits up.']
+});
+function contextualCandidates(state,s,r,speaker,mood){
+ const frames=responseVoices[speaker];if(!frames)return null;
+ if(['win','enemy','enemyLevel','field','advantage'].includes(s.id))return null;
+ const prior=id=>state.results.findLast(x=>x.id===id);
+ const subject=/^mastery\d+$/.test(s.id)?prior('ability'+s.id.slice(7))?.label:s.id==='toolmaster'?prior('tool')?.label:null;
+ const topicLabel=(s.name||s.label||s.id).replace(/^your /i,'').replace(/[?]$/,'').toLowerCase();
+ const tier=/^(Very low|Low|Average|High|Exceptional|Monstrous|Legendary|Beginner|Below average|Skilled|Expert|Mastered|Transcendent)$/.test(r.label);
+ const value=subject?subject+' at '+r.label:tier?r.label.toLowerCase()+' '+topicLabel:s.id==='exactAge'?r.label+' years old':s.id==='count'?r.label+' techniques':r.label==='Yes'?topicLabel:r.label==='No'?'no '+topicLabel:r.label;
+ let details=optionDetails[r.label];
+ if(subject)details=mood==='bad'?[`You haven’t mastered ${subject} yet; start with a smaller, repeatable movement.`,`Don’t count on ${subject} working under pressure until you can repeat it in practice.`]:mood==='good'?[`You can put ${subject} into a combination now; practice the recovery afterward.`,`Your ${subject} training gives you options beyond repeating the opening move.`]:[`Keep practicing ${subject} against a target that fights back.`,`You have room to improve the timing of ${subject}.`];
+ if(!details&&s.id==='origin')details=[`Being a ${r.label} gives you a starting point; your choices from here still matter.`,`Decide how you’ll use your ${r.label} background before taking your first mission.`];
+ if(!details&&['age','exactAge','ancientAge'].includes(s.id))details=[`At ${r.label}${s.id==='exactAge'?' years old':''}, you’ll need a training schedule you can actually sustain.`,`Age ${r.label} tells me less than seeing how you handle your first difficult lesson.`];
+ if(!details&&s.id==='clan')details=[`${r.label} is where your story begins; learn what that background offers you.`,`A connection to ${r.label} could matter when you need someone to trust you.`];
+ if(!details&&s.id==='faction')details=[`Find out what ${r.label} expects before promising to follow their orders.`,`Working with ${r.label} means learning to coordinate with their people.`];
+ if(!details&&s.id==='count')details=[`${r.label} ${Number(r.label)===1?'technique needs':'techniques need'} practice time, not just a place on your character sheet.`,`Choose a reliable opening from your ${r.label} ${Number(r.label)===1?'technique':'techniques'} before adding a complicated combination.`];
+ if(!details&&s.id==='tool')details=[`Check the balance of your ${r.label} before trusting it in a fight.`,`Practice recovering after a missed attack with ${r.label}.`];
+ if(!details&&/^ability\d+$/.test(s.id))details=[`Try ${r.label} at short range first, then test where it stops being reliable.`,`Work out what leaves you exposed after using ${r.label}.`,`Find a safe way to cancel ${r.label} before trying it at full power.`];
+ if(!details&&['Yes','No'].includes(r.label))details=r.label==='Yes'?[`${s.label} is available, but you still need to learn its limits.`,`Now that you have ${s.label}, work out when it’s worth using.`]:[`You don’t have ${s.label}; build a plan that works without it.`,`Don’t base your next combination on ${s.label} when it isn’t available.`];
+ if(!details){const label=s.name||s.label||s.id,energy=prior('energy')?.score||0;
+  const stat={strength:['A missed heavy strike can leave your guard open.','Make sure you can stop the swing as well as start it.'],durability:['Being able to take a hit doesn’t mean you should volunteer for one.','Keep protecting the parts of you that armor can’t cover.'],speed:['Choose where you’ll stop before you rush past the target.','Leave room to turn instead of racing straight into a counter.'],stamina:['Save enough for the trip back after the fight.','A long fight will test the pace you choose at the beginning.'],reflexes:['React to the actual attack instead of the first feint.','Practice keeping your balance when you have to change direction.'],control:[energy>=5&&r.score<=2?'Your reserves are high enough to make a loss of control dangerous.':'Keep the output steady while you move.','Small adjustments are easier to learn before the pressure increases.'],energy:['Keep some reserves for the exchange after your strongest attack.','Measure how much you spend on an ordinary technique.'],output:['Check the blast area before you increase the force.','Putting everything into one attack leaves you with fewer choices.'],recovery:['Learn how much rest you need between bursts.','Don’t confuse feeling better with having your reserves back.'],iq:['Ask what evidence you’re missing before choosing the clever-looking answer.','Explain your plan so someone else can spot the gap.'],'battle iq':['Watch how the opponent answers your first move.','Keep an alternative ready when the obvious route closes.']};
+  details=stat[s.id];
+  if(details){const assessment=mood==='bad'?`${r.label} ${label.toLowerCase()} is a weakness you’ll need to plan around. `:mood==='good'?`${r.label} ${label.toLowerCase()} gives you something useful to build on. `:`Your ${label.toLowerCase()} is ${r.label.toLowerCase()}. `;details=details.map(x=>assessment+x);}
+  else if(tier)details=mood==='bad'?[`Your ${topicLabel} still needs work; give yourself time to improve before depending on it.`,`Keep your next ${topicLabel} exercise simple enough to repeat without losing control.`]:mood==='good'?[`Your ${topicLabel} could help the team through a difficult fight.`,`Put that ${topicLabel} to work without forgetting the rest of your training.`]:[`Your ${topicLabel} is a starting point; see how well it holds up in practice.`,`Practice using your ${topicLabel} while the rest of your plan changes.`];
+  else details=[`${r.label} changes how you approach ${topicLabel}; try a short practice run first.`,`Plan around ${r.label} before you commit to your next move.`];
+ }
+ return frames.flatMap(frame=>details.map(detail=>frame.replaceAll('{value}',value).replaceAll('{detail}',detail).replaceAll('{detailLower}',detail[0].toLowerCase()+detail.slice(1))));
+}
+
+root.AWGDialogueExpansion={contextualCandidates,responseVoices,optionDetails,voices,topics,exchanges,outcomes,findTopic,enemyVoices,nonverbal};if(typeof module!=='undefined')module.exports=root.AWGDialogueExpansion;
 })(typeof window!=='undefined'?window:globalThis);

@@ -20,8 +20,24 @@ function describe(run,preview=true){
  return {gender:run.gender==='female'?'female':'male',age,base:age<=20?0:age<=40?1:age<=64?2:3,origin,faction,abilities,element,color,equipment,weapon,skin,transformed,factionHue,seed,modelVariant:age>=40?1:Math.floor(seed/3)%2,outfit:get('origin')||get('faction')?outfits[run.world]:null,intensity:get('energy')?.score||0,mastery:Math.max(0,...rows.filter(x=>/^mastery\d+$/.test(x.id)).map(x=>x.score)),preview:!!(preview&&run.pending)};
 }
 const artwork=typeof module!=='undefined'?require('./character-art.js'):root.AWGCharacterArt;
+const identityArtwork=typeof module!=='undefined'?require('./identity-art.js'):root.AWGIdentityArt;
+function identityKey(run,preview=false){
+ const p=describe(run,preview);
+ const origins={dragonball:{Majin:'majin',Namekian:'namekian','Frost demon':'frost',Saiyan:'saiyan',Android:'android'},fairytail:{Exceed:'exceed'},onepiece:{'Fish-man':'fishman',Mink:'mink',Giant:'giant',Lunarian:'lunarian'},jjk:{'Cursed spirit':'spirit'},bleach:{Arrancar:'arrancar',Visored:'visored'},hxh:{'Chimera Ant':'chimera'}};
+ if(run.world==='aot'&&p.transformed)return p.transformed;
+ return origins[run.world]?.[p.origin]||null;
+}
 function model(run,pose=0,preview=false){
  const p=describe(run,preview),variant=p.modelVariant;
+ const identity=identityKey(run,preview),entry=identityArtwork?.[identity];
+ if(entry){
+  const female=p.gender==='female',defeated=pose>=3;
+  const row=entry.rows?entry.rows[female?1:0]:entry.row;
+  const column=entry.poses===6?Math.max(0,Math.min(5,pose)):entry.poses===2?(defeated?entry.column+1:entry.column):(defeated?2:0)+(female?1:0);
+  const atlas=entry.atlas,tile=row*atlas.columns+column,rect=atlas.frames[tile];
+  const standing=atlas.frames[row*atlas.columns+(entry.poses===6?0:entry.poses===2?entry.column:female?1:0)];
+  return {world:run.world,row,column,tile,variant:0,identity,sheet:entry.sheet,rect,atlas,relativeHeight:rect[3]/standing[3]};
+ }
  const row=(p.gender==='female'?2:0)+variant;
  const column=Number.isInteger(pose)&&pose>=0&&pose<6?pose:0;
  const atlas=artwork[run.world],tile=row*6+column,rect=atlas?.frames[tile];
@@ -29,18 +45,19 @@ function model(run,pose=0,preview=false){
 }
 function render(target,run,preview=true,options={}){
  const p=describe(run,preview),m=model(run,options.pose||0,preview);
- target.replaceChildren();target.className='portrait-art cohesive '+p.gender+' skin-'+p.skin+(p.transformed?' transformed':'');
- target.setAttribute('role','img');target.setAttribute('aria-label',`Complete ${p.gender} character, ${run.world} outfit, ${['standing','celebrating','confident','kneeling','seated','resting on one knee'][m.column]}. Build: ${p.origin}, age ${p.age}, ${p.faction}.`);
+ target.replaceChildren();target.className='portrait-art cohesive '+p.gender+' skin-'+p.skin+(p.transformed?' transformed':'')+(m.identity?' identity-model identity-'+m.identity.toLowerCase().replaceAll(' ','-'):'');
+ target.setAttribute('role','img');target.setAttribute('aria-label',`Complete ${p.gender} ${m.identity||'human'} character, ${options.pose>=3?'defeated':'ready'}. Build: ${p.origin}, age ${p.age}, ${p.faction}.`);
  target.style.background='#0c1427';
  if(m.rect){
   const [x,y,w,h]=m.rect,body=document.createElement('span');body.className='character-fullbody';
   body.style.backgroundImage="url('"+m.sheet+"')";body.style.backgroundSize=(m.atlas.width/w*100)+'% '+(m.atlas.height/h*100)+'%';
   body.style.backgroundPosition=(x/(m.atlas.width-w)*100)+'% '+(y/(m.atlas.height-h)*100)+'%';body.style.aspectRatio=w+'/'+h;
+  body.style.setProperty?.('--model-ratio',String(w/h));
   body.style.maskImage=m.atlas.masks[m.tile];body.style.webkitMaskImage=m.atlas.masks[m.tile];body.style.maskSize='100% 100%';body.style.webkitMaskSize='100% 100%';body.style.maskRepeat='no-repeat';body.style.webkitMaskRepeat='no-repeat';
   body.setAttribute('data-model',run.world+':'+m.row);body.setAttribute('data-pose',String(m.column));target.append(body);
  }else{const missing=document.createElement('span');missing.className='art-missing';missing.textContent='Character artwork unavailable';target.append(missing);}
  if(p.transformed){const form=document.createElement('span');form.className='portrait-form';form.textContent=p.transformed;target.append(form);}
  return p;
 }
-root.AWGPortrait={describe,model,render};if(typeof module!=='undefined')module.exports=root.AWGPortrait;
+root.AWGPortrait={describe,identityKey,model,render};if(typeof module!=='undefined')module.exports=root.AWGPortrait;
 })(typeof window!=='undefined'?window:globalThis);

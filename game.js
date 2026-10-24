@@ -49,5 +49,20 @@ while(state.queue[state.index]?.requires){const required=state.queue[state.index
 const next=state.queue[state.index];if(next?.ability){const used=state.results.filter(x=>x.id.startsWith('ability')).map(x=>x.label);next.options=next.options.filter(x=>!used.includes(x.label));}if(state.index>=state.queue.length)state.finished=true;}
 const dialogue=typeof module!=='undefined'?require('./reactions.js'):root.AWGDialogue;
 function reaction(state,s,r,rng){return dialogue.react(state,s,r,reactionPairs,rng);}
-root.AWG={worlds,tiers,reactionPairs,ageFollowups,upgrade,makeQueue,fresh,setAppearance,weighted,current,commit,chance,reaction};if(typeof module!=='undefined')module.exports=root.AWG;
+function simulateChapter(state,rng=Math.random){
+ const chapter=current(state)?.chapter;if(state.finished||chapter===undefined)return null;
+ const results=[];
+ // Commit through the same path as manual play: age ranges, power counts,
+ // prerequisites, duplicate powers and final battle odds remain authoritative.
+ while(!state.finished&&current(state)?.chapter===chapter){
+  const s=current(state),kept=!!state.pending;
+  if(!state.pending){state.pending={...s.options[weighted(s.options,rng())]};state.reaction=reaction(state,s,state.pending,rng);}
+  else if(!state.reaction)state.reaction=reaction(state,s,state.pending,rng);
+  const response=JSON.parse(JSON.stringify(state.reaction));commit(state);
+  results.push({...state.results.at(-1),reaction:response,kept});
+ }
+ state.simulationPaused=true;
+ return state.lastSimulation={chapter,results};
+}
+root.AWG={worlds,tiers,reactionPairs,ageFollowups,upgrade,makeQueue,fresh,setAppearance,weighted,current,commit,chance,reaction,simulateChapter};if(typeof module!=='undefined')module.exports=root.AWG;
 })(typeof window!=='undefined'?window:globalThis);

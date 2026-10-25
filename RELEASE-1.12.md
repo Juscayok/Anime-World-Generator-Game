@@ -8,7 +8,7 @@ Rivals respond in 22 individual competitive voices, with comments about the sele
 
 Cowboy Bebop and One Punch Man are also complete standalone worlds. Each includes identities, roots, factions, twelve techniques, conditional specialties, equipment, ten enemies and four reaction hosts. New art includes 48 complete player poses, 40 opponent poses, 32 expressive host portraits, an eleven-world icon atlas and the tournament arena.
 
-One gem now restores the current run's rerolls to three, capped at three. Full or finished runs cannot spend a gem on a refill. The charge and refill credit share one durable wallet record, so a failed save cannot spend a gem without delivering a refill. Old unused paid bonus rerolls are refunded one-for-one as gems. Normal victories and tournament championships each award one gem, once per run.
+One gem now restores the current run's rerolls to three, capped at three. Full or finished runs cannot spend a gem on a refill. The charge and refill credit share one durable wallet record, so a failed save cannot spend a gem without delivering a refill. Old unused paid bonus rerolls are refunded one-for-one as gems. Normal victories award one gem and tournament championships award three gems, once per run. Tournament round wins do not refill rerolls.
 
 Desktop and mobile retain manual rolls, section simulation, appearance selection, odds, character sheets and the library. Tournament simulation stops at each match boundary. Existing saved characters remain readable.
 

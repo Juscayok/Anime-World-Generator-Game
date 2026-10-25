@@ -1,5 +1,7 @@
 # Release 1.12
 
+- Tournament championships now award 3 gems; regular victories still award 1 gem.
+
 - Added the combined eleven-world tournament wheel, mixed source-aware builds, an eight-contender bracket, round progression and elimination.
 - Added Cowboy Bebop and One Punch Man as complete worlds, with new characters, powers, reactions and artwork.
 - Added 22 personal rival voices and the approved arena, portrait wheel and tournament interface.

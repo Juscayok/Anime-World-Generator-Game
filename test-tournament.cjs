@@ -8,9 +8,9 @@ for(let n=1;n<=100;n++){
  }
  const serialized=JSON.parse(JSON.stringify(s));assert.deepEqual(serialized.tournament,s.tournament);assert.equal(P.model(serialized).sheet,P.model(s).sheet);
  for(let round=0;round<3&&!s.finished;round++){
-  const startRound=t.round,opponent=G.tournament.rival(s);assert(s.queue[s.index].fixed);
+  s.rerolls=1;const startRound=t.round,opponent=G.tournament.rival(s);assert(s.queue[s.index].fixed);
   while(!s.finished&&t.round===startRound){const step=G.current(s),outcome=n%4===0&&round===1?'DEFEAT':'VICTORY';s.pending={...step.options.find(x=>x.label===outcome)||step.options[0]};s.reaction=G.reaction(s,step,s.pending,()=>.5);assert.equal(s.reaction.speaker,opponent.name);assert(!/[{}]/.test(s.reaction.text));assert(s.reaction.artWorld);if(step.id==='win'&&s.reaction.portraitExpression!==undefined)assert.equal(s.reaction.portraitExpression,outcome==='VICTORY'?0:3);G.commit(s);}
-  assert(t.round>startRound);if(!s.finished)assert.equal(s.queue[s.index].id,'enemy');
+  assert(t.round>startRound);assert.equal(s.rerolls,1,'Round progression never regenerates rerolls');if(!s.finished)assert.equal(s.queue[s.index].id,'enemy');
  }
  assert(s.finished);assert.equal(t.rounds.length,3);assert.equal(t.rounds.reduce((n,r)=>n+r.matches.length,0),7);assert.equal(t.champion.id==='player',n%4!==0);assert.equal(G.playerWon(s),n%4!==0);assert.deepEqual(B.describe(JSON.parse(JSON.stringify(s))),B.describe(s));assert(B.describe(s).tile!==null);
 }

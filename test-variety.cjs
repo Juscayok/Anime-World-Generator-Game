@@ -28,4 +28,4 @@ for(const mobile of [false,true]){
  t.run("state.results.push({id:'enemy',label:'Sukuna'});state.reactionCount=2;state.pending={label:'Prime',score:7};state.reaction=G.reaction(state,{id:'enemyLevel'},state.pending,()=>.5);render();showMobileReaction()");assert.match(t.get('reactionImage').style.backgroundImage,/battle-enemies-jjk/);if(mobile)assert.equal(t.get('mobileArt').style.backgroundImage,t.get('reactionImage').style.backgroundImage);
 }
 const appearances=new Set();for(let n=0;n<100;n++){const s=G.fresh('jjk');s.id='appearance-'+n;const p=P.describe(s);assert.deepEqual(P.describe(JSON.parse(JSON.stringify(s))),p);appearances.add(P.model(s).row);}assert.equal(appearances.size,2);
-console.log(`Variety: 36 hosts, ${opponents} selected enemies, reveal/reroll gating, condition/outcome dialogue, repeat avoidance, save stability, appearance diversity and desktop/mobile artwork passed.`);
+console.log(`Variety: 44 hosts, ${opponents} selected enemies, reveal/reroll gating, condition/outcome dialogue, repeat avoidance, save stability, appearance diversity and desktop/mobile artwork passed.`);

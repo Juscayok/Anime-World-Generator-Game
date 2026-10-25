@@ -326,7 +326,7 @@ function react(state,s,r,pairs,rng=Math.random){
   if(details[topics])result.text+=' '+pick(state,'detail:'+speaker+':'+topics,details[topics],rng);
   const portrait=variety.portraits.indexOf(speaker);if(portrait>=0)result.portraitIndex=portrait;
  }
- const eligible=!enemyTurn&&!named&&pair.indexOf(speaker)<2&&s.id!=='win'&&state.world!=='onepiece'&&turn>=2&&turn-(state.lastZoroCameo??-100)>=8;
+ const eligible=!enemyTurn&&!named&&pair.indexOf(speaker)<2&&s.id!=='win'&&state.world!=='onepiece'&&!!cameoLines[state.world]?.length&&turn>=2&&turn-(state.lastZoroCameo??-100)>=8;
  if(eligible&&rng()<.05){const exchange=pick(state,'cameo'+state.world,cameoLines[state.world].filter(x=>x[1]===speaker),rng);state.lastZoroCameo=turn;result.cameo={guest:'Zoro',host:exchange[1],guestLine:exchange[0],hostLine:exchange[2]};result.frame=pair.indexOf(exchange[1])*4+1;result.speaker=exchange[1];}
  const expanded=expandReaction(state,s,r,result,pair,rng);
  const expression=s.id==='win'?(r.label==='VICTORY'?3:0):expanded.benefit==='bad'?0:expanded.benefit==='neutral'?1:score>=6?3:2;

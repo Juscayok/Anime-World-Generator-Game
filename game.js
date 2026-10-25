@@ -11,12 +11,15 @@ const worlds={
  bleach:{name:'Bleach',energy:'Spiritual pressure',ability:'Spiritual technique',origin:['Soul Reaper','Quincy','Arrancar','Fullbringer','Visored'],clans:['Rukongai','Seireitei','Karakura Town','Hueco Mundo','Wandenreich'],groups:['Gotei 13','Independent','Royal Guard allies','Hueco Mundo faction'],powers:['Getsuga Tensho','Cero','Kido Barrage','Spirit Arrow','Flash Step Strike','Soul Chain','Flame Slash','Ice Prison','Shadow Bind','Petal Storm','Lightning Spear','Spirit Shield'],enemies:['Renji','Ikkaku','Grimmjow','Byakuya','Ulquiorra','Kenpachi','Shunsui','Aizen','Ichigo','Yhwach'],extras:[['Release unlocked','bool'],['Release mastery','master','Release unlocked'],['Ultimate release','bool'],['Ultimate mastery','master','Ultimate release'],['Movement mastery','master'],['Barrier mastery','master'],['Spiritual sensing','master']],weapons:['Zanpakuto','Spirit bow','Twin blades','Lance','Fullbring focus']},
  dragonball:{name:'Dragon Ball',energy:'Ki',ability:'Signature technique',origin:['Human','Saiyan','Namekian','Android','Frost demon','Majin'],clans:['Earth','Planet Vegeta','Namek','Other World','Unknown planet'],groups:['Z Fighters','Galactic Patrol','Independent','Frieza Force'],powers:['Kamehameha','Galick Gun','Special Beam Cannon','Destructo Disc','Solar Flare','Instant Transmission','Final Flash','Death Beam','Spirit Bomb','Tri-Beam','Masenko','Energy Barrier'],enemies:['Yamcha','Tien','Piccolo','Android 18','Frieza','Cell','Majin Buu','Vegeta','Goku','Beerus'],extras:[['Transformation potential','bool'],['Transformation mastery','master','Transformation potential'],['Ki sensing','master'],['Flight mastery','master'],['Regeneration','bool'],['Divine training','bool'],['Divine control','master','Divine training']],weapons:['Power Pole','Sword','Energy blade','Weighted gear','Battle armor']}
 };
+const newer=typeof module!=='undefined'?require('./worlds-new.js'):root.AWGNewWorlds;
+const tournament=typeof module!=='undefined'?require('./tournament.js'):root.AWGTournament;
 const extra=typeof module!=='undefined'?require('./worlds-extra.js'):root.AWGExtra;
-Object.assign(worlds,extra.worlds);Object.assign(reactionPairs,extra.pairs);
+Object.assign(worlds,extra.worlds,newer.worlds);Object.assign(reactionPairs,extra.pairs,newer.pairs);
+Object.defineProperty(worlds,'tournament',{value:tournament.definition(worlds),enumerable:false});reactionPairs.tournament=['Vegeta','Spike','Saitama','Gojo'];
 const variety=typeof module!=='undefined'?require('./reaction-variety.js'):root.AWGReactionVariety;
 for(const [world,names] of Object.entries(variety.additions))reactionPairs[world].push(...names);
 worlds.naruto.enemies.splice(7,0,'Sasuke');worlds.onepiece.enemies.splice(8,0,'Luffy');worlds.bleach.enemies.splice(2,0,'Rukia');
-const options=list=>list.map((x,i)=>typeof x==='string'?{label:x,weight:1,score:3}:{label:x[0],weight:x[1],score:x[2]});
+const options=list=>list.map((x,i)=>typeof x==='string'?{label:x,weight:1,score:3}:!Array.isArray(x)?{...x}:{label:x[0],weight:x[1],score:x[2]});
 function step(id,label,chapter,list,extra={}){return{id,label,chapter,options:options(list),...extra};}
 function ageFollowups(range){
  if(range==='Ancient')return [step('ancientAge','How ancient are you?',0,['100–119','200–219','500–519','1000–1019'],{name:'Ancient age range',neutral:true})];
@@ -31,7 +34,7 @@ function upgrade(state){
  if(age)state.queue.splice(state.index+(state.pending?1:0),0,...ageFollowups(age.label));
  return state;
 }
-function makeQueue(key){const w=worlds[key];return[
+function makeQueue(key){if(key==='tournament')return tournament.makeQueue(worlds,step,power,tiers);const w=worlds[key];return[
 step('origin','Who are you?',0,w.origin.map((x,i)=>[x,i===w.origin.length-1?5:24,i===w.origin.length-1?6:3]),{name:'Identity'}),step('age','How old are you?',0,['16–20','21–30','31–45','46–70','Ancient'],{neutral:true}),step('clan',key==='naruto'?'Your clan':'Your roots',0,w.clans,{neutral:true}),step('faction','Who do you stand with?',0,w.groups,{neutral:true}),step('potential','Your natural potential',0,power),
 step('energy',w.energy+' reserves',1,power),step('control',w.energy+' control',1,tiers),step('output',w.energy+' output',1,power),step('recovery',w.energy+' recovery',1,tiers),
 step('count','How many '+(w.ability.toLowerCase().endsWith('y')?w.ability.toLowerCase().slice(0,-1)+'ies':w.ability.toLowerCase()+'s')+'?',2,[['1',40,3],['2',35,4],['3',18,5],['4',6,6],['5',1,7]]),
@@ -40,21 +43,22 @@ step('count','How many '+(w.ability.toLowerCase().endsWith('y')?w.ability.toLowe
 ...['Combat skill','Weapon skill','IQ','Battle IQ'].map(x=>step(x.toLowerCase(),x,4,tiers)),step('tool','Your equipment',4,w.weapons,{neutral:true}),step('toolmaster','Equipment mastery',4,tiers),
 step('enemy','Who is your enemy?',5,w.enemies.map((x,i)=>[x,1,Math.min(7,2+i*.55)]),{neutral:true}),step('enemyLevel','Your enemy’s condition',5,[['Weakened',25,2],['Base form',43,3],['Full power',25,5],['Prime',7,7]],{neutral:true}),step('field','The battlefield',5,['City ruins','Open plains','Dense forest','Underground arena','Mountain summit'],{neutral:true}),step('advantage','Your starting conditions',5,[['Ambushed',20,1],['Exhausted',15,2],['Even footing',40,3],['Prepared',20,5],['Perfect setup',5,7]]),step('win','Do you win?',5,[['VICTORY',50,7],['DEFEAT',50,1]])];}
 function setAppearance(run,choice,rng=Math.random){run.genderChoice=['male','female','random'].includes(choice)?choice:'male';run.gender=run.genderChoice==='random'?(rng()<.5?'male':'female'):run.genderChoice;return run;}
-function fresh(world,gender='male',rng=Math.random){return setAppearance({version:1,id:Date.now()+'-'+Math.random().toString(36).slice(2),world,queue:makeQueue(world),index:0,results:[],pending:null,rerolls:3,finished:false},gender,rng);}
+function fresh(world,gender='male',rng=Math.random){const run=setAppearance({version:1,id:Date.now()+'-'+Math.random().toString(36).slice(2),world,queue:makeQueue(world),index:0,results:[],pending:null,rerolls:3,finished:false},gender,rng);if(world==='tournament')tournament.initialize(run,worlds,rng);return run;}
 function weighted(list,r=Math.random()){let sum=list.reduce((s,x)=>s+x.weight,0),target=r*sum;for(let i=0;i<list.length;i++){target-=list[i].weight;if(target<0)return i;}return list.length-1;}
-function chance(state){const values=state.results.filter(x=>!x.neutral&&x.id!=='count'&&x.id!=='advantage');const avg=values.reduce((s,x)=>s+x.score,0)/(values.length||1);const enemy=state.results.find(x=>x.id==='enemy')?.score||3;const level=state.results.find(x=>x.id==='enemyLevel')?.score||3;const setup=state.results.find(x=>x.id==='advantage')?.score||3;return Math.max(5,Math.min(95,Math.round(55+(avg-enemy)*13+(3-level)*5+(setup-3)*5)));}
-function current(state){const s=state.queue[state.index];if(!s)return null;if(s.id==='win'){const p=chance(state);return{...s,options:options([['VICTORY',p,7],['DEFEAT',100-p,1]])};}return s;}
-function commit(state){const s=current(state);if(!s||!state.pending)return;const result={id:s.id,name:s.name||s.label,label:state.pending.label,score:state.pending.score,chapter:s.chapter,neutral:s.neutral||false};state.results.push(result);if(s.id==='age'||s.id==='ancientAge')state.queue.splice(state.index+1,0,...ageFollowups(result.label));if(s.id==='count'){const n=Number(result.label),w=worlds[state.world];const inserted=[];for(let i=1;i<=n;i++){inserted.push(step('ability'+i,w.ability+' '+i,2,w.powers,{neutral:true,ability:true}),step('mastery'+i,'Technique '+i+' mastery',2,tiers));}state.queue.splice(state.index+1,0,...inserted);}state.index++;state.pending=null;
+function chance(state){if(state.world==='tournament')return tournament.chance(state);const values=state.results.filter(x=>!x.neutral&&x.id!=='count'&&x.id!=='advantage');const avg=values.reduce((s,x)=>s+x.score,0)/(values.length||1);const enemy=state.results.find(x=>x.id==='enemy')?.score||3;const level=state.results.find(x=>x.id==='enemyLevel')?.score||3;const setup=state.results.find(x=>x.id==='advantage')?.score||3;return Math.max(5,Math.min(95,Math.round(55+(avg-enemy)*13+(3-level)*5+(setup-3)*5)));}
+function current(state){const s=state.queue[state.index];if(!s)return null;if(s.mixed){const totals={};for(const o of s.options)totals[o.world]=(totals[o.world]||0)+o.weight;return {...s,options:s.options.map(o=>({...o,weight:o.weight/totals[o.world]*100}))};}if(s.id==='win'){const p=chance(state);return{...s,options:options([['VICTORY',p,7],['DEFEAT',100-p,1]])};}return s;}
+function commit(state){const s=current(state);if(!s||!state.pending)return;const result={id:s.id,name:s.name||s.label,label:state.pending.label,score:state.pending.score,chapter:s.chapter,neutral:s.neutral||false,...(state.pending.world?{world:state.pending.world}:{})};state.results.push(result);if(s.id==='age'||s.id==='ancientAge')state.queue.splice(state.index+1,0,...ageFollowups(result.label));if(s.id==='count'){const n=Number(result.label),w=worlds[state.world];const inserted=[];for(let i=1;i<=n;i++){inserted.push(step('ability'+i,w.ability+' '+i,2,state.world==='tournament'?tournament.pool(worlds,'powers'):w.powers,{neutral:true,ability:true,mixed:state.world==='tournament'}),step('mastery'+i,'Technique '+i+' mastery',2,tiers));}state.queue.splice(state.index+1,0,...inserted);}if(state.world==='tournament')tournament.afterCommit(state,s,result,step);state.index++;state.pending=null;
 while(state.queue[state.index]?.requires){const required=state.queue[state.index].requires;const r=state.results.find(x=>x.name===required);if(r&&r.label!=='No'&&r.label!=='None')break;state.index++;}
 const next=state.queue[state.index];if(next?.ability){const used=state.results.filter(x=>x.id.startsWith('ability')).map(x=>x.label);next.options=next.options.filter(x=>!used.includes(x.label));}if(state.index>=state.queue.length)state.finished=true;}
 const dialogue=typeof module!=='undefined'?require('./reactions.js'):root.AWGDialogue;
-function reaction(state,s,r,rng){return dialogue.react(state,s,r,reactionPairs,rng);}
+const rivals=typeof module!=='undefined'?require('./rival-dialogue.js'):root.AWGRivalDialogue;
+function reaction(state,s,r,rng){return state.world==='tournament'?rivals.react(state,s,r,reactionPairs,rng):dialogue.react(state,s,r,reactionPairs,rng);}
 function simulateChapter(state,rng=Math.random){
  const chapter=current(state)?.chapter;if(state.finished||chapter===undefined)return null;
- const results=[];
+ const results=[],round=state.tournament?.round;
  // Commit through the same path as manual play: age ranges, power counts,
  // prerequisites, duplicate powers and final battle odds remain authoritative.
- while(!state.finished&&current(state)?.chapter===chapter){
+ while(!state.finished&&current(state)?.chapter===chapter&&(round===undefined||state.tournament.round===round)){
   const s=current(state),kept=!!state.pending;
   if(!state.pending){state.pending={...s.options[weighted(s.options,rng())]};state.reaction=reaction(state,s,state.pending,rng);}
   else if(!state.reaction)state.reaction=reaction(state,s,state.pending,rng);
@@ -62,7 +66,7 @@ function simulateChapter(state,rng=Math.random){
   results.push({...state.results.at(-1),reaction:response,kept});
  }
  state.simulationPaused=true;
- return state.lastSimulation={chapter,results};
+ return state.lastSimulation={chapter,results,...(round===undefined?{}:{round})};
 }
-root.AWG={worlds,tiers,reactionPairs,ageFollowups,upgrade,makeQueue,fresh,setAppearance,weighted,current,commit,chance,reaction,simulateChapter};if(typeof module!=='undefined')module.exports=root.AWG;
+root.AWG={worlds,tiers,reactionPairs,ageFollowups,upgrade,makeQueue,fresh,setAppearance,weighted,current,commit,chance,reaction,simulateChapter,tournament,playerWon:tournament.playerWon};if(typeof module!=='undefined')module.exports=root.AWG;
 })(typeof window!=='undefined'?window:globalThis);

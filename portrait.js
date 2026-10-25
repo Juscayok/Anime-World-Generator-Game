@@ -19,9 +19,14 @@ function describe(run,preview=true){
  const seed=[...(run.id||run.world)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,0);
  return {gender:run.gender==='female'?'female':'male',age,base:age<=20?0:age<=40?1:age<=64?2:3,origin,faction,abilities,element,color,equipment,weapon,skin,transformed,factionHue,seed,modelVariant:age>=40?1:Math.floor(seed/3)%2,outfit:get('origin')||get('faction')?outfits[run.world]:null,intensity:get('energy')?.score||0,mastery:Math.max(0,...rows.filter(x=>/^mastery\d+$/.test(x.id)).map(x=>x.score)),preview:!!(preview&&run.pending)};
 }
-const artwork=typeof module!=='undefined'?require('./character-art.js'):root.AWGCharacterArt;
+const extraArt=typeof module!=='undefined'?require('./new-art.js'):root.AWGNewArt;
+const artwork={...(typeof module!=='undefined'?require('./character-art.js'):root.AWGCharacterArt),...extraArt.players};
+const tournament=typeof module!=='undefined'?require('./tournament.js'):root.AWGTournament;
 const identityArtwork=typeof module!=='undefined'?require('./identity-art.js'):root.AWGIdentityArt;
 function identityKey(run,preview=false){
+ if(run.world==='tournament'){const p=describe(run,preview);if(p.transformed?.includes('Titan'))return p.transformed;return identityKey({...run,world:tournament.sourceWorld(run,preview)},preview);}
+ if(run.world==='opm'&&describe(run,preview).origin==='Monster')return 'spirit';
+ if((run.world==='opm'&&describe(run,preview).origin==='Cyborg')||(run.world==='cowboy'&&describe(run,preview).origin==='Cybernetic specialist'))return 'android';
  const p=describe(run,preview);
  const origins={dragonball:{Majin:'majin',Namekian:'namekian','Frost demon':'frost',Saiyan:'saiyan',Android:'android'},fairytail:{Exceed:'exceed'},onepiece:{'Fish-man':'fishman',Mink:'mink',Giant:'giant',Lunarian:'lunarian'},jjk:{'Cursed spirit':'spirit'},bleach:{Arrancar:'arrancar',Visored:'visored'},hxh:{'Chimera Ant':'chimera'}};
  if(run.world==='aot'&&p.transformed)return p.transformed;
@@ -40,8 +45,9 @@ function model(run,pose=0,preview=false){
  }
  const row=(p.gender==='female'?2:0)+variant;
  const column=Number.isInteger(pose)&&pose>=0&&pose<6?pose:0;
- const atlas=artwork[run.world],tile=row*6+column,rect=atlas?.frames[tile];
- return {world:run.world,row,column,tile,variant,sheet:'character-models-'+run.world+'.png',rect,atlas,relativeHeight:rect?rect[3]/atlas.frames[row*6][3]:1};
+ const modelWorld=run.world==='tournament'?tournament.sourceWorld(run,preview):run.world;
+ const atlas=artwork[modelWorld],tile=row*6+column,rect=atlas?.frames[tile];
+ return {world:run.world,row,column,tile,variant,sheet:'character-models-'+modelWorld+'.png',rect,atlas,relativeHeight:rect?rect[3]/atlas.frames[row*6][3]:1};
 }
 function render(target,run,preview=true,options={}){
  const p=describe(run,preview),m=model(run,options.pose||0,preview);

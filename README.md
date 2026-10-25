@@ -1,6 +1,8 @@
 # Anime World Generator
 
-**Version 1.11** — Spin your way into an anime universe, build a character, and let the reactions judge your luck.
+**Version 1.12** — Spin your way into an anime universe, build a character, and let the reactions judge your luck.
+
+Version 1.12 adds a combined eleven-world Tournament mode, Cowboy Bebop, One Punch Man, personal competitive rival reactions, and one-gem refills that restore all three rerolls. See [RELEASE-1.12.md](RELEASE-1.12.md) for details and [ART-1.12-PROMPTS.json](ART-1.12-PROMPTS.json) for generated artwork prompts.
 
 Version 1.11 adds section simulation with a complete results review, option-specific dialogue in 36 character voices, detailed battle scenery, and identity transformations including Majin, Exceed and all nine Titan forms. Simulation preserves a revealed roll and stops before the next section, using the same odds and conditional rules as manual play. See [RELEASE-1.11.md](RELEASE-1.11.md), run `node test-simulation-identities.cjs`, or open `qa-features.html` with the preview server to compare all 23 transformed identities and five battlefields. Generated artwork prompts are saved in [ART-1.11-PROMPTS.json](ART-1.11-PROMPTS.json).
 
@@ -66,7 +68,7 @@ No account, installation, build step, or internet connection is required after d
 3. Double-click **index.html** to open the game in a modern browser.
 4. Keep the HTML, CSS, JavaScript, and image files together.
 
-Version **1.11** appears in the app footer and browser title.
+Version **1.12** appears in the app footer and browser title.
 
 ## How to play
 
@@ -82,12 +84,12 @@ Starting a new run replaces the unfinished run. Completed characters remain in y
 
 ## Windows executable
 
-The game can also be packaged as **Anime World Generator 1.11.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
+The game can also be packaged as **Anime World Generator 1.12.exe**. Double-clicking it extracts the complete offline game and opens it in your default browser.
 
 - Recommended: Windows 10 or 11 and a modern default browser.
 - Uses the .NET Framework supplied with modern Windows.
 - Includes all game assets and artwork; no installer is needed.
-- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.11`.
+- Extracts to `%LOCALAPPDATA%\AnimeWorldGenerator\1.12`.
 - This personal release is unsigned, so Windows may show a publisher or reputation warning.
 
 Generated executables and ZIPs are kept in the local `dist/` folder, which is not tracked in Git. Downloading the source repository does not include a prebuilt executable. See the build instructions below.
@@ -144,13 +146,13 @@ The script uses the Windows .NET Framework C# compiler, embeds the game files, v
 
 ```text
 dist/
-  Anime World Generator 1.11.exe
-  Anime-World-Generator-1.11-Windows.zip
+  Anime World Generator 1.12.exe
+  Anime-World-Generator-1.12-Windows.zip
   READ ME.txt
   SHA256.txt
 ```
 
-The script also creates `Anime-World-Generator-1.11-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
+The script also creates `Anime-World-Generator-1.12-Browser.zip`, containing the HTML game and its assets without an executable. The `build/` and `dist/` folders are ignored by Git.
 
 ## Project layout
 

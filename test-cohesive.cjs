@@ -1,4 +1,4 @@
-const assert=require('node:assert/strict'),fs=require('node:fs'),G=require('./game.js'),P=require('./portrait.js'),A=require('./character-art.js');
+const assert=require('node:assert/strict'),fs=require('node:fs'),G=require('./game.js'),P=require('./portrait.js'),A={...require('./character-art.js'),...require('./new-art.js').players};
 const {setup}=require('./test-mobile.cjs');
 let frames=0;const identities=new Set();
 for(const world of Object.keys(G.worlds)){
@@ -15,7 +15,7 @@ for(const world of Object.keys(G.worlds)){
   run.results=[{id:'enemy',label:G.worlds[world].enemies[0]},{id:'win',label:'VICTORY'}];assert.equal(P.model(run).row,neutral.row,'Opponent and outcome cannot change character identity');
  }
 }
-assert.equal(identities.size,36);assert.equal(frames,216);
+assert.equal(identities.size,44);assert.equal(frames,264);
 for(const mobile of [false,true]){
  const t=setup(mobile);
  for(const world of Object.keys(G.worlds))for(const outcome of ['VICTORY','DEFEAT']){
@@ -26,4 +26,4 @@ for(const mobile of [false,true]){
   assert.equal(t.run('AWGPortrait.model(state).row'),t.run('AWGPortrait.model(JSON.parse(JSON.stringify(state))).row'));
  }
 }
-console.log('Cohesive artwork: 36 stable identities, 216 complete pose frames, nine worlds, serialized saves, opponent isolation and desktop/mobile single-model rendering passed.');
+console.log('Cohesive artwork: 44 stable identities, 264 complete pose frames, eleven worlds, serialized saves, opponent isolation and desktop/mobile single-model rendering passed.');

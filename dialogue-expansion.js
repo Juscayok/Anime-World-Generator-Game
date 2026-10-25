@@ -337,5 +337,7 @@ function contextualCandidates(state,s,r,speaker,mood){
  return frames.flatMap(frame=>details.map(detail=>frame.replaceAll('{value}',value).replaceAll('{detail}',detail).replaceAll('{detailLower}',detail[0].toLowerCase()+detail.slice(1))));
 }
 
+const newer=typeof module!=='undefined'?require('./worlds-new.js'):root.AWGNewWorlds;
+Object.assign(voices,newer.voices);Object.assign(responseVoices,newer.responseVoices);Object.assign(optionDetails,newer.optionDetails);Object.assign(enemyVoices,newer.enemyVoices);Object.assign(exchanges,newer.exchanges);Object.assign(outcomes,newer.outcomes);
 root.AWGDialogueExpansion={contextualCandidates,responseVoices,optionDetails,voices,topics,exchanges,outcomes,findTopic,enemyVoices,nonverbal};if(typeof module!=='undefined')module.exports=root.AWGDialogueExpansion;
 })(typeof window!=='undefined'?window:globalThis);

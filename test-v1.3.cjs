@@ -1,4 +1,4 @@
-const assert=require('node:assert/strict'),fs=require('node:fs'),G=require('./game.js'),P=require('./portrait.js'),B=require('./battle.js'),A=require('./battle-art.js');const {setup}=require('./test-mobile.cjs');
+const assert=require('node:assert/strict'),fs=require('node:fs'),G=require('./game.js'),P=require('./portrait.js'),B=require('./battle.js'),A={...require('./battle-art.js'),...require('./new-art.js').enemies};const {setup}=require('./test-mobile.cjs');
 for(const gender of ['male','female'])assert.equal(G.fresh('jjk',gender).gender,gender);
 assert.equal(G.fresh('jjk','random',()=>0).gender,'male');assert.equal(G.fresh('jjk','random',()=>.99).gender,'female');
 const random=G.fresh('jjk','random',()=>.9);assert.equal(G.upgrade(JSON.parse(JSON.stringify(random))).gender,'female');assert.equal(random.genderChoice,'random');

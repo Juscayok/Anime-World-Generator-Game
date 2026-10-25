@@ -1,3 +1,11 @@
+# Release 1.12
+
+- Added the combined eleven-world tournament wheel, mixed source-aware builds, an eight-contender bracket, round progression and elimination.
+- Added Cowboy Bebop and One Punch Man as complete worlds, with new characters, powers, reactions and artwork.
+- Added 22 personal rival voices and the approved arena, portrait wheel and tournament interface.
+- Changed one gem to restore all three rerolls, with durable purchases and refunds for unused legacy bonus rolls.
+- Updated mobile controls, offline packages and deployment assets to 1.12.
+
 # Release 1.11
 
 - Added optional section simulation with a per-result dialogue review and automatic pause at the next section.

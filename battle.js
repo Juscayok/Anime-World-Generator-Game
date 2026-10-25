@@ -1,14 +1,18 @@
 (function(root){
 'use strict';
-const artwork=typeof module!=='undefined'?require('./battle-art.js'):root.AWGBattleArt;
+const extraArt=typeof module!=='undefined'?require('./new-art.js'):root.AWGNewArt;
+const artwork={...(typeof module!=='undefined'?require('./battle-art.js'):root.AWGBattleArt),...extraArt.enemies};
+const newer=typeof module!=='undefined'?require('./worlds-new.js'):root.AWGNewWorlds;
 // Explicit artwork order: never substitute a reaction host for an opponent.
 const roster={jjk:['Yuji','Megumi','Todo','Jogo','Mahito','Toji','Yuta','Kenjaku','Gojo','Sukuna'],naruto:['Rock Lee','Neji','Gaara','Kakashi','Orochimaru','Itachi','Pain','Sasuke','Obito','Madara','Naruto'],onepiece:['Buggy','Arlong','Crocodile','Rob Lucci','Doflamingo','Katakuri','Zoro','Kizaru','Luffy','Kaido','Shanks'],bleach:['Renji','Ikkaku','Rukia','Grimmjow','Byakuya','Ulquiorra','Kenpachi','Shunsui','Aizen','Ichigo','Yhwach'],dragonball:['Yamcha','Tien','Piccolo','Android 18','Frieza','Cell','Majin Buu','Vegeta','Goku','Beerus'],fairytail:['Wendy','Gray','Lucy','Gajeel','Erza','Natsu','Laxus','Jellal','Zeref','Acnologia'],mha:['Mineta','Iida','Uraraka','Kirishima','Todoroki','Deku','Bakugo','Dabi','Shigaraki','All For One'],aot:['Pure Titan','Abnormal Titan','Military Police squad','Warrior squad','Jaw Titan','Mikasa','Armored Titan','Eren','Beast Titan','Colossal Titan'],hxh:['Tonpa','Genthru','Gon','Killua','Knuckle','Feitan','Hisoka','Chrollo','Neferpitou','Meruem']};
+for(const [key,w] of Object.entries(newer.worlds))roster[key]=w.enemies;
 function describe(run){
  const enemy=run.results.findLast(x=>x.id==='enemy')?.label;
  const outcome=run.results.findLast(x=>x.id==='win')?.label;
  if(!run.finished||!enemy||!['VICTORY','DEFEAT'].includes(outcome))return null;
- const index=roster[run.world]?.indexOf(enemy)??-1;
- return {enemy,outcome,won:outcome==='VICTORY',index,tile:index<0?null:index+(outcome==='VICTORY'?12:0),sheet:'battle-enemies-'+run.world+'.png',condition:run.results.findLast(x=>x.id==='enemyLevel')?.label||'Base form',field:run.results.findLast(x=>x.id==='field')?.label||'Open plains',gender:run.gender==='female'?'female':'male'};
+ const world=run.world==='tournament'?run.results.findLast(x=>x.id==='enemy')?.world:run.world;
+ const index=roster[world]?.indexOf(enemy)??-1;
+ return {world,enemy,outcome,won:outcome==='VICTORY',index,tile:index<0?null:index+(outcome==='VICTORY'?12:0),sheet:'battle-enemies-'+world+'.png',condition:run.results.findLast(x=>x.id==='enemyLevel')?.label||'Base form',field:run.results.findLast(x=>x.id==='field')?.label||'Open plains',gender:run.gender==='female'?'female':'male'};
 }
 function render(target,run){
  const d=describe(run);target.replaceChildren();target.className='battle-scene';
@@ -24,7 +28,7 @@ function render(target,run){
  player.style.height=Math.min(86,76*m.relativeHeight)+'cqh';
  const art=document.createElement('div');root.AWGPortrait.render(art,run,false,{pose});player.append(art);target.append(player);
  const opponent=document.createElement('div');opponent.className='battle-opponent '+(d.won?'kneeling':'standing');opponent.setAttribute('aria-label',d.enemy+(d.won?' defeated':' victorious'));opponent.setAttribute('data-opponent',d.enemy);
- if(d.tile!==null){opponent.style.backgroundImage="url('"+d.sheet+"')";const atlas=artwork[run.world],rect=atlas.frames[d.tile];if(rect){const [x,y,w,h]=rect;opponent.style.backgroundSize=(atlas.width/w*100)+'% '+(atlas.height/h*100)+'%';opponent.style.backgroundPosition=(x/(atlas.width-w)*100)+'% '+(y/(atlas.height-h)*100)+'%';opponent.style.width='calc(var(--enemy-height) * '+(w/h)+')';}if(d.enemy.includes('squad'))opponent.className+=' squad';}
+ if(d.tile!==null){opponent.style.backgroundImage="url('"+d.sheet+"')";const atlas=artwork[d.world],rect=atlas.frames[d.tile];if(rect){const [x,y,w,h]=rect;opponent.style.backgroundSize=(atlas.width/w*100)+'% '+(atlas.height/h*100)+'%';opponent.style.backgroundPosition=(x/(atlas.width-w)*100)+'% '+(y/(atlas.height-h)*100)+'%';opponent.style.width='calc(var(--enemy-height) * '+(w/h)+')';}if(atlas.masks?.[d.tile]){opponent.style.maskImage=atlas.masks[d.tile];opponent.style.webkitMaskImage=atlas.masks[d.tile];opponent.style.maskSize='100% 100%';opponent.style.webkitMaskSize='100% 100%';}if(d.enemy.includes('squad'))opponent.className+=' squad';}
  else{opponent.className+=' art-missing';opponent.textContent='Artwork unavailable: '+d.enemy;}
  if(['Full power','Prime'].includes(d.condition))opponent.className+=' powered';target.append(opponent);
  const caption=document.createElement('div');caption.className='battle-caption';const title=document.createElement('strong');title.textContent=d.outcome;const names=document.createElement('span');names.textContent='You vs '+d.enemy;caption.append(title,names);target.append(caption);

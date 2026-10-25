@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),G=require('./game.js'),E=require('./dialogue-expansion.js');const {setup}=require('./test-mobile.cjs');
-const allHosts=Object.values(G.reactionPairs).flat();assert.equal(Object.keys(E.voices).length,36);
+const allHosts=Object.values(G.reactionPairs).flat();assert.equal(Object.keys(E.voices).length,44);
 let newLines=0;for(const name of allHosts){for(const mood of ['bad','good','neutral']){const rows=E.voices[name][mood];assert(rows.length>=2);assert.equal(new Set(rows).size,rows.length);newLines+=rows.length;}}
 for(const topic of E.topics){const pair=G.reactionPairs[topic.world];assert(Object.keys(topic.lines).every(n=>pair.includes(n)));const s=G.fresh(topic.world);s.reactionCount=2;const r=G.reaction(s,{id:'ability1',label:'Your technique',neutral:true},{label:topic.terms[0],score:3},()=>.5);assert.equal(r.knowledge,topic.key,topic.world+' '+topic.key);assert(topic.lines[r.speaker]);assert(!r.conversation);}
 const mastery=G.fresh('jjk');mastery.reactionCount=2;mastery.results=[{id:'ability2',label:'Straw Doll Technique'}];assert.equal(G.reaction(mastery,{id:'mastery2',label:'Mastery'},{label:'Beginner',score:1},()=>.5).knowledge,'straw-doll');

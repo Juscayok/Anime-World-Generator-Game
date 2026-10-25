@@ -1,0 +1,45 @@
+{
+  "tool": "Built-in image_gen",
+  "assets": [
+    {
+      "file": "new-reactions.png",
+      "transparent_background": false,
+      "prompt": "Exactly 8 columns and 4 equal rows, 32 square portrait cells, no gutters or text. Columns in order: Spike Spiegel (Cowboy Bebop, messy dark green hair, slim face, blue suit yellow shirt); Jet Black (Cowboy Bebop, bald with beard and cybernetic arm); Faye Valentine (Cowboy Bebop, violet bob hair, yellow outfit); Ed (Cowboy Bebop, red hair goggles, exuberant teenager); Saitama (One Punch Man, bald, yellow suit white cape); Genos (One Punch Man, blonde hair black sclera golden eyes, mechanical shoulders); Tatsumaki (One Punch Man, curly green hair black dress); Garou (One Punch Man, spiky silver hair, dark martial arts shirt). Within every column the SAME recognizable character. Row 1 frustrated or upset at defeat, row 2 thoughtful skeptical assessing a rival, row 3 confident approval competitive smirk, row 4 excited victory celebration (Saitama only mildly pleased). Expressive polished anime chibi bust portraits, bold outlines, rich cel shading, dark navy and purple individual portrait backdrops. Exact uniform 8x4 layout, entire face visible in every cell."
+    },
+    {
+      "file": "character-models-cowboy.png",
+      "transparent_background": true,
+      "prompt": "Transparent game sprite atlas EXACT 6 columns by 4 equal rows. Four ORIGINAL Cowboy Bebop style adult space bounty hunters, not existing named characters. Row 1 slim male messy dark hair, navy tailored suit, yellow shirt, scuffed boots, holstered sidearm. Row 2 stockier male short hair, brown flight jacket and cargo pants, cybernetic left forearm. Row 3 female short violet hair, practical burgundy jacket over mustard shirt, dark cargo pants and boots, holstered sidearm. Row 4 female brown ponytail, teal flight jacket, dark jumpsuit and boots. Each row EXACT SAME identity and outfit across six poses: standing neutral, cheering victorious, confident ready stance, defeated on one knee, defeated sitting, exhausted on one knee. FULL BODIES. Every figure entirely within its cell, at least 12% transparent padding on all sides. No overlap, feet and hair fully visible, no weapons raised at camera. Polished cel shaded anime, crisp outlines. Actual transparent alpha, no backgrounds, shadows, text, grid or watermark."
+    },
+    {
+      "file": "character-models-opm.png",
+      "transparent_background": true,
+      "prompt": "Transparent game sprite atlas EXACT 6 columns by 4 equal rows. Four ORIGINAL adult One Punch Man style heroes, not existing named characters. Row 1 athletic male black swept hair, deep blue armored hero suit with white short cape and gold gloves. Row 2 muscular male silver cropped hair, crimson and charcoal martial arts hero uniform with high collar. Row 3 athletic female dark short hair, violet and white practical armored hero suit, short white cape, boots and gloves. Row 4 female chestnut ponytail, emerald and black fitted hero jumpsuit, gold gauntlets and boots. Each row EXACT SAME identity and outfit across six poses: standing neutral, cheering victorious, confident ready stance, defeated on one knee, defeated sitting, exhausted on one knee. FULL BODIES. All figures fully within own cell with 12% empty transparent padding on all four sides, no overlap, entire boots and hair visible. Detailed clean cel shaded anime. Actual transparent alpha, no backgrounds, shadows, text, grid or watermark."
+    },
+    {
+      "file": "battle-enemies-cowboy.png",
+      "transparent_background": true,
+      "prompt": "Transparent anime chibi game opponent atlas EXACT 4 columns by 6 equal rows. Top three rows contain ten standing full body characters in reading order: Asimov Solensan (long dark hair, scruffy beard, brown poncho); Abdul Hakim (tall broad man, long dark coat and hat); Andy (blonde cowboy, white cowboy hat and fringed jacket); Gren (long teal hair, blue military style outfit); Faye Valentine (violet bob, yellow outfit red jacket); Jet Black (bald beard, blue work clothes, metal arm); Mad Pierrot (round black Victorian suit, top hat, theatrical face); Vincent Volaju (long black hair, dark trench coat); Vicious (long silver hair, black suit, katana); Spike Spiegel (messy dark green hair, blue suit, yellow shirt). The final TWO CELLS of row 3 are completely EMPTY. Bottom three rows repeat these same ten characters in identical reading order, but visibly defeated kneeling or seated exhausted. Last TWO CELLS empty. All 20 sprites full body separated with generous 15% transparent padding in every cell, no overlapping. Same consistent polished anime chibi style as a fan anime game, bold contours, crisp cel shading. Actual transparent background, no floors, shadows, text or grid."
+    },
+    {
+      "file": "battle-enemies-opm.png",
+      "transparent_background": true,
+      "prompt": "Transparent anime chibi game opponent atlas EXACT 4 columns by 6 equal rows. Top three rows contain ten standing full body characters in reading order: Mumen Rider (green helmet goggles, brown cyclist hero suit); Speed-o'-Sound Sonic (black ninja suit, long tied black hair purple scarf); Tanktop Master (muscular blond man, tank top); Fubuki (dark green dress, short dark hair, white fur coat); Genos (blond hair, mechanical arms, black outfit); Garou (spiky silver hair, black martial artist shirt); Tatsumaki (curly green hair, black dress); Bang (elderly silver hair mustache, black dojo uniform); Boros (cyclops alien, white spiky hair, purple armored suit); Saitama (bald, yellow jumpsuit, red gloves and boots, white cape). The final TWO CELLS of row 3 are completely EMPTY. Bottom three rows repeat these same ten characters in identical reading order, but visibly defeated kneeling or seated exhausted. Last TWO CELLS empty. All 20 sprites full body separated by generous 15% transparent padding in every cell, no touching or overlapping. Recognizable faces, polished anime chibi bold contours crisp cel shading, no gore. Actual transparent background, no floors, shadows, text or grid."
+    },
+    {
+      "file": "tournament-arena.png",
+      "transparent_background": false,
+      "prompt": "Wide detailed cinematic anime tournament arena at night, polished dark stone battle platform foreground, huge circular stadium seating in background, violet neon strips and purple spotlights, warm braziers near stone pillars, distant crowd silhouettes, dramatic moody deep navy and violet palette. No prominent characters, no UI, no text or logos. Center and upper area dark and calm enough to sit behind a game wheel UI, interesting detailed stonework and architecture at edges. Premium cel shaded anime environment illustration, landscape 1536x1024."
+    }
+  ],
+  "additional": [
+    {
+      "file": "tournament-icons.png",
+      "prompt": "Anime game portrait icon atlas, exact 6 columns and 2 rows, dark navy square cells: row one Yuji, Naruto, Luffy, Ichigo, Goku, Natsu; row two Deku, Eren, Gon, Spike, Saitama, empty. Consistent expressive chibi faces, no text, head fully within each cell."
+    },
+    {
+      "file": "battle-enemies-cowboy.png",
+      "prompt": "Reconstruct reference as exactly 4 columns and 6 rows with transparent padding. Row 1 standing Asimov, Abdul Hakim, Andy, Gren. Row 2 standing Faye, Jet, Mad Pierrot, Vincent. Row 3 standing Vicious, Spike, empty, empty. Rows 4–6 repeat the same order defeated, with final two cells empty. Preserve faces, outfits and full bodies, no touching, background, text or grid."
+    }
+  ]
+}
